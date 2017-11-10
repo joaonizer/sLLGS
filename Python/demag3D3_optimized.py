@@ -48,7 +48,7 @@
 # !
 
 import numpy as np
-import numba as nb
+# import numba as nb
 
 # # @nb.jit(nopython = True, nogil = True)
 # def xyz(px,ad,bd,au,bu,th):
