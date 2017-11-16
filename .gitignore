@@ -103,3 +103,5 @@ ENV/
 src-build/
 plots/
 _*/
+*.bmp
+
