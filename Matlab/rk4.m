@@ -25,5 +25,3 @@ k(4,:)=dm(mm(3,:),h_eff,i_s);
 m_new(:)=m+(k(1,:) + 2*(k(2,:) + k(3,:)) + k(4,:))*dt/6;
 
 end
-
-M_new = M_atual + Dm(------)*dt;
