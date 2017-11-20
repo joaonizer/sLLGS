@@ -18,7 +18,7 @@ N = 10000;       % numero de passos
 tempo_total=200e-9;% Tempo total de simulação
 alpha=1.0;
 n = [0 1 0];
-T=300;        % Kelvin
+T=0;        % Kelvin
 Ms=800e3;   % A/m
 kbT=kb*T;   % J
 ti = 0;     % instante inicial da variavel independente
@@ -31,7 +31,7 @@ end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-part_n=18; % quantidade de particulas
+part_n=23; % quantidade de particulas
 %%%%%% ^ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%% ^ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -77,14 +77,14 @@ cortes_y=[
     0    0     0     0
     0     0     0     0
     0     0     0   -10
-    10     0     0   0
+    0     0     0   -10
     0     0     0     0
     0     0     0     0
     0     0     0     0
     0     0     0     0
     0     0     0     0
     0     0     0     0
-    20     0     0     0
+    10     0     0     0
     0     0     0     0
     0     0     0     0
     ];
@@ -106,30 +106,32 @@ end
 %     165     0     0
 %     220     0     0];
 
+dy=124*[1:6]; %% deslocamentos em y
+offset=0;
 d_or=[
     0     0     0 % P1
-    0   260     0 % P2
-    0   520     0 % P3
-    0   780     0 % P4
+    0   dy(2)     0 % P2
+    0   dy(4)+offset     0 % P3
+    0   dy(6)+offset     0 % P4
     60     0     0 % P5
-    60   260     0 % P6
-    60   520     0 % P7
-    60   780     0 % P8
+    60   dy(2)     0 % P6
+    60   dy(4)+offset     0 % P7
+    60   dy(6)+offset     0 % P8
     120     0     0 % P9
-    120   260     0 % P10
-    120   520     0 % P11
-    120   780     0 % P12
-    120   130     0 % P13
-    120   650     0 % P14
-    180   130     0 % P15
-    180   650     0 % P16
-    240   130     0 % P17
-    240   650     0 % P18
-    240   260     0 % P19
-    240   520     0 % P20
-    240   390     0 % P21
-    300   390     0 % P22
-    360   390     0 % P23
+    120   dy(2)     0 % P10
+    120   dy(4)+offset     0 % P11
+    120   dy(6)+offset     0 % P12
+    120   dy(1)     0 % P13
+    120   dy(5)+offset     0 % P14
+    180   dy(1)     0 % P15
+    180   dy(5)+offset     0 % P16
+    240   dy(1)     0 % P17
+    240   dy(5)+offset     0 % P18
+    240   dy(2)     0 % P19
+    240   dy(4)     0 % P20
+    240   dy(3)     0 % P21
+    300   dy(3)     0 % P22
+    360   dy(3)     0 % P23
     ];
 
 %d_or(13:end,1)=d_or(13:end,1)+25;
@@ -145,18 +147,14 @@ if compute_NCND
 else
     warning('Tensores não foram recalculados!');
 end
-% Nd(2,1,:) = Nd(1,2,:);
-% Nd(3,1,:) = Nd(1,3,:);
-% Nd(3,2,:) = Nd(2,3,:);
-%
-%
-Nc(:,:,15,9:10)=zeros(3,3,1,2);
-Nc(:,:,9:10,15)=zeros(3,3,2,1);
-Nc(:,:,16,11:12)=zeros(3,3,1,2);
-Nc(:,:,11:12,16)=zeros(3,3,2,1);
-% Nc(:,:,2,5:7)=zeros(3,3,1,3);
-% Nc(:,:,5:7,2)=zeros(3,3,1,3);
-% Nc(:,:,5:7,3)=zeros(3,3,1,3);
+Nc_old = Nc;
+ Nc(:,:,15,9:10)=zeros(3,3,1,2);
+ Nc(:,:,9:10,15)=zeros(3,3,2,1);
+ Nc(:,:,16,11:12)=zeros(3,3,1,2);
+ Nc(:,:,11:12,16)=zeros(3,3,2,1);
+ Nc(:,:,22,19:20)=zeros(3,3,1,2);
+ Nc(:,:,19:20,22)=zeros(3,3,2,1);
+
 %% Corrente de Spin
 % Define a curva da corrente de spin aplicada
 % Utiliza a mesma estrutura que do campo aplicado +info: help campute_Happ2
