@@ -14,8 +14,13 @@ t2am=7.943e5;       % converte T para A/m
 gammamu0=2.211e5;   % (sA/m)-1
 hbar=2.05457e-34; % J.s/rad  -> h/2pi
 %% Configuracoes do Algoritmo
-N = 10000;       % numero de passos
-tempo_total=200e-9;% Tempo total de simulação
+if computer == "GLNXA64"
+    platform= "lin";
+else
+    platform = 'win';
+end
+N = 5000;       % numero de passos
+tempo_total=100e-9;% Tempo total de simulação
 alpha=1.0;
 n = [0 1 0];
 T=0;        % Kelvin
@@ -49,7 +54,6 @@ for i=2:part_n % inicializa as partículas de forma antiferromagnetica
     m(:,:,i)=(-1)^(i-1)*m(:,:,1);
 end
 %% Dimensoes da Particula
-platform='win';
 
 w=ones(1,part_n)*50;  % width of particles
 
@@ -165,7 +169,7 @@ is=I_s./(q*gammamu0*mu0*Ms*Ns); % magnitude normalizada da corrente de spin
 i_s=zeros(N+1,3,part_n);
 
 %% Campo Aplicado
-for jj=1:4
+for jj=1:1
     h_app=zeros(N+1,3,part_n);
     a=150e-3; % T
     

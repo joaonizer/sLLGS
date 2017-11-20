@@ -104,8 +104,8 @@ PROGRAM dipolar3D3_noDAT
 99	FORMAT(E13.4)
 100	FORMAT(E13.4,E13.4,E13.4)
 
-	OPEN(unit=9,  file='IN_dipolar3D.dat',  status='unknown')
-	OPEN(unit=10, file='OUT_dipolar3D.dat', status='unknown')
+	!OPEN(unit=9,  file='IN_dipolar3D.dat',  status='unknown')
+	!OPEN(unit=10, file='OUT_dipolar3D.dat', status='unknown')
 
 	
 	!READ(9,*)px_i(1),py_i(1)
