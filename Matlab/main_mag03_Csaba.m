@@ -1,7 +1,7 @@
 %% Inicio
 clc
 close all
-%clear all
+clear all
 %clear all
 global alpha alpha_l Ms K1 HkMs sig kbT q time_step gammamu0 A T n;
 %% Constantes
@@ -19,8 +19,8 @@ hbar=1.054571800e-34; % J.s/rad  -> h/2pi
 part_n=15; % quantidade de particulas
 %%%%%% ^ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%% ^ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-rm_time=[1]; %ns
-n_runs = 1000; % numero de simulações em cada tipo de rampa
+rm_time=[1 10 200 2000]; %ns
+n_runs = 50; % numero de simulações em cada tipo de rampa
 comp=zeros(part_n,30,4);
 for tt=1:length(rm_time)
     for jj =1:n_runs
@@ -87,7 +87,7 @@ for tt=1:length(rm_time)
         else
             compute_NCND=0;
         end
-        compute_PAR=1; % If TRUE uses paralel parfor to compute coupling tensor
+        compute_PAR=0; % If TRUE uses paralel parfor to compute coupling tensor
         
         if compute_NCND
             [Nc,Nd,V]=compute_Tensores(px,py,d_or,th,part_n,platform,compute_PAR);
@@ -125,7 +125,7 @@ for tt=1:length(rm_time)
         HkMs=2*K1/Ms/mu0/Ms;
         % dt (adimensional) --> dt_real = dt/gammamu0*Ms
         %sig=sqrt(2*alpha*kbT/mu0/V(1)/dt)/Ms;
-        seed=length(rm_time)*tt + jj;
+        seed=length(rm_time)*tt + jj+50;
         rng(seed);
         sig=sqrt(2*alpha*kbT/gammamu0/mu0/Ms/V(1)/time_step)/Ms;
         
@@ -186,8 +186,7 @@ for tt=1:length(rm_time)
         mask = [1 -1 1 -1 1 -1 1 -1 1 -1 1 -1 1 -1 1];% -1 1 -1 1 -1 1 -1 1 -1 1];
         comp(:,jj,tt) = round(squeeze(m(N,2,:)))'==mask;
     end
-end
-%% Final analisys
+    %% Final analisys
 error_count=zeros(part_n,4);
 for tt=1:length(rm_time)
     for jj=1:n_runs
@@ -197,6 +196,17 @@ for tt=1:length(rm_time)
         end
     end
 end
-plot(error_count/n_runs,'o-');
+figure('Position',[100 100 1000 500], ...
+    'Name','Alocação das Partículas');
+plot(1:15,error_count(:,:)/100,'o-');
 
-legend('1 ns', '10 ns', '200 ns', '2 $\mu$s')
+lh=legend('1 ns', '10 ns', '200 ns', '2 $\mu$s')
+set(lh,'Location','Best');
+%xlabel('Particle')
+title('100 Runs')
+ylabel('P_{error}')
+grid on
+sdf('P1')
+print('-djpeg','-r300',['P_error.jpeg'])
+end
+
