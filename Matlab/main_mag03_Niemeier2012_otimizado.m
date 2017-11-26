@@ -14,8 +14,8 @@ t2am=7.943e5;       % converte T para A/m
 gammamu0=2.211e5;   % (sA/m)-1
 hbar=2.05457e-34; % J.s/rad  -> h/2pi
 %% Configuracoes do Algoritmo
-if computer == "GLNXA64"
-    platform= "lin";
+if computer == 'GLNXA64'
+    platform= 'lin';
 else
     platform = 'win';
 end
@@ -36,7 +36,7 @@ end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-part_n=18; % quantidade de particulas
+part_n=25; % quantidade de particulas
 %%%%%% ^ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%% ^ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -68,29 +68,31 @@ py=px;
 d_or=zeros(part_n,3);
 cortes_y=zeros(part_n,4);
 cortes_y=1*[
-    0     0     0     0
-    0     0     0     0
-    0     0     0     0
-    0     0     0     0
-    0     10     -10     0
-    0     10     -10     0
-    0     0     0     0
-    0     0     0     0
-    10     0     0     -10
-    10     0     0     -10
-    0     0     0     0
-    0     0     0     0
-    0     0     0   -10
-    0     0     0   -10
-    0     10     -10     0
-    0     10     -10     0
-    0     0     0     0
-    0     0     0     0
-    0     0     0     0
-    0     0     0     0
-    10     0     0     0
-    0     0     0     0
-    0     0     0     0
+    25     0     0     -25     % 1
+    25     0     0     -25     % 2
+    25     0     0     -25     % 3
+    25     0     0     -25     % 4
+    0     25     -25     0  % 5
+    0     25     -25     0  % 6
+    0     25     -25     0     % 7
+    0     25     -25     0     % 8
+    25     0     0     -25  % 9
+    25    0     0      -25  % 10
+    25     0     0     -25     % 11
+    25    0     0      -25     % 12
+    0     0     0   -10     % 13
+    0     0     0   -10     % 14
+    0     25     -25     0  % 15
+    0     25     -25     0  % 16
+%    5    5     -5    -5
+%    5    5     -5    -5
+    25     0     0     -25     % 17
+    25     0     0     -25     % 18
+    25     0     0     -25     % 19
+    25     0     0      -25     % 20
+    10     0     0     0    % 21
+    0     25     -25     0     % 22
+    25     0     0     -25     % 23
     ];
 % cortes_y=[
 %     0     0     0     0
@@ -133,8 +135,8 @@ end
 %     110     0     0
 %     165     0     0
 %     220     0     0];
-dy=110*[1:6]; %% deslocamentos em y
-offset=200;
+dy=115*[1:6]; %% deslocamentos em y
+offset=0;
 d_or=[
     0     0     0 % P1
     0   dy(2)     0 % P2
@@ -152,13 +154,15 @@ d_or=[
     120   dy(5)+offset     0 % P14
     180   dy(1)     0 % P15
     180   dy(5)+offset     0 % P16
-    240   dy(1)     0 % P17
-    240   dy(5)+offset     0 % P18
-    240   dy(2)     0 % P19
-    240   dy(4)     0 % P20
-    240   dy(3)     0 % P21
-    300   dy(3)     0 % P22
-    360   dy(3)     0 % P23
+    240   dy(1)     0 % P15
+    240   dy(5)+offset     0 % P16
+    300   dy(1)     0 % P17
+    300   dy(5)+offset     0 % P18
+    300   dy(2)     0 % P19
+    300   dy(4)     0 % P20
+    300   dy(3)     0 % P21
+    360   dy(3)     0 % P22
+    420   dy(3)     0 % P23
     ];
 
 %d_or(13:end,1)=d_or(13:end,1)+25;
@@ -181,8 +185,8 @@ end
 %
 %Nc(:,:,15,9:10)=zeros(3,3,1,2);
 %Nc(:,:,9:10,15)=zeros(3,3,2,1);
-Nc(:,:,20,15:16)=zeros(3,3,1,2);
-Nc(:,:,15:16,20)=zeros(3,3,2,1);
+%Nc(:,:,20,15:16)=zeros(3,3,1,2);
+%Nc(:,:,15:16,20)=zeros(3,3,2,1);
 %% Corrente de Spin
 % Define a curva da corrente de spin aplicada
 % Utiliza a mesma estrutura que do campo aplicado +info: help campute_Happ2
@@ -272,7 +276,7 @@ for jj=1:4
                 0   0   0   0   0   0   N/10 %10
                 0   0   0   0   0   0   N/10 %1
                 ];
-        elseif i<=12
+        elseif i<=8
             cor(i,:)=colors(2,:);
             s=      [
                 0   0   0   a   0   0   N/10 %1
@@ -286,7 +290,7 @@ for jj=1:4
                 0   0   0   0   0   0   N/10 %9
                 0   0   0   0   0   0   N/10 %10
                 ];
-        elseif i<=28
+        elseif i<=18
             cor(i,:)=colors(3,:);
             s=      [
                 0   0   0   a   0   0   N/10 %10
@@ -381,7 +385,7 @@ for jj=1:4
     set(groot, 'defaultLegendInterpreter','latex');
     
     %% Plota as magnetizacoes e campos aplicados
-    figure('Position',[0 0 1400 1400], ...
+    figure('Position',[0 0 1000 1400], ...
         'Name','Magnetizações e Campos Aplicados');
     
     cols=7; %numero de colunas no plot
@@ -393,7 +397,12 @@ for jj=1:4
         38, 10, 39, ...
         11, 40, 12, 33, 19, ...
         26, 27, 28];
-    
+
+%     cols=8; %numero de colunas no plot
+%     rows=7;%ceil(part_n/cols); % numero de linhas
+%     plot_place=[
+%         49 33 17 1 50 34 18 2 51 43 35 19 11 3 44 12 45 13 46 38 30 22 14 31 32];
+%     
     for j=1:part_n
         subplot(rows,cols,plot_place(j));
         plot(t,squeeze(m(:,1:2,j))); % Plota a Magnetização
@@ -422,7 +431,7 @@ for jj=1:4
 end
 
 %% Plota as particulas
-figure('Position',[1200 100 500 900], ...
+figure('Position',[400 50 300 600], ...
     'Name','Alocação das Partículas');
 
 espaco1=1:2:2*part_n-1;
