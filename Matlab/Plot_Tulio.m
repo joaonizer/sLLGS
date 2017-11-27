@@ -5,19 +5,15 @@ close all
 
 %% Configuracoes do Sistema
 
-part_n=6; % quantidade de particulas
+dx=20; % distancia x entre as particulas
+dy=40; % distancia y entre as particulas
 
-dx=10; % distancia x entre as particulas
-dy=20; % distancia y entre as particulas
+w=60;  % width of particles
+l=120; % length of particles
 
-w=100;  % width of particles
+r=40; % radius in nnm
 
-l=100; % length of particles
-r=w/2; % radius in nnm
 
-px=zeros(part_n,4);
-py=px;
-d_or=zeros(part_n,3);
 
 %%
 
@@ -26,8 +22,9 @@ d_or=zeros(part_n,3);
 % 1 - retangular
 % 2 - circular
 grid = [
-    1 2 1 2 2
-    2 1 2 2 2
+    0 1 0 1 0
+    1 1 0 1 1
+    1 1 0 0 1
     ];
 
 % Especificação do CLOCK
@@ -39,16 +36,20 @@ grid = [
 clock = [
     0 1 2 3 4
     4 3 2 1 0
+    4 3 2 1 0
     ];
 % Deslocamento em nm de cada particula
 xshift = [
     0 0 0 0 0
+    0 10 0 0 0
     0 0 0 0 0
     ];
 yshift = [
+    0 -10 0 0 0
     0 0 0 0 0
     0 0 0 0 0
     ];
+
 %% Data Verification
 data.name={'tipo';'xshift';'yshift';'clock'};
 data.data={grid;xshift;yshift;clock};
@@ -100,8 +101,8 @@ end
 
 daspect([1 1 1])
 %title(['Distâncias ' num2str(d_min) 'nm'])
-ylim([0 max(d_or(:,2))+l/2])
-xlim([0 max(d_or(:,1))+w/2])
+ylim([0 size(grid,1)*(l+dy)-dy])
+xlim([0 size(grid,2)*(w+dx)-dx])
 view([0 -90])
 %xlabel('nm')
 %ylabel('nm')
