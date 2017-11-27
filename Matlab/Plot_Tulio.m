@@ -10,9 +10,7 @@ part_n=6; % quantidade de particulas
 dx=10; % distancia x entre as particulas
 dy=20; % distancia y entre as particulas
 
-platform='lin';
-
-w=50;  % width of particles
+w=100;  % width of particles
 
 l=100; % length of particles
 r=w/2; % radius in nnm
@@ -21,22 +19,35 @@ px=zeros(part_n,4);
 py=px;
 d_or=zeros(part_n,3);
 
-%% Especificações do Grid
+%%
+
+% Especificação do Grid
+% 0 - sem partícula
+% 1 - retangular
+% 2 - circular
 grid = [
-    1 2 1
-    2 1 2
+    1 2 1 2 2
+    2 1 2 2 2
     ];
+
+% Especificação do CLOCK
+% 0 - INPUT
+% 1 - Rede 1
+% ...
+% 4 - Rede 4
+% 5 - Cruzador campo em y
 clock = [
-    1 0 2
-    0 3 4
+    0 1 2 3 4
+    4 3 2 1 0
     ];
+% Deslocamento em nm de cada particula
 xshift = [
-    0 0 0
-    0 0 0
+    0 0 0 0 0
+    0 0 0 0 0
     ];
 yshift = [
-    0 0 0
-    0 0 0
+    0 0 0 0 0
+    0 0 0 0 0
     ];
 %% Data Verification
 data.name={'tipo';'xshift';'yshift';'clock'};
@@ -49,15 +60,16 @@ disp(data.data{1,:});
 
 
 %% Cores diferentes para particulas que estao em zonas de clock diferentes
-cor=[204,85,90
-    74,180,195
-    192,94,175
-    109,164,81
-    118,117,203
-    192,137,61]/255;
+cor=[204,85,90 % Input
+    192,94,175 % Clock 1 
+    109,164,81 % Clock 2
+    118,117,203 % Clock 3
+    192,137,61  % Clock 4
+    74,180,195 % Cruzador
+    ]/255;
 
 %% Plota as particulas
-figure('Position',[0 0 600 600], ...
+figure('Position',[150 150 600 600], ...
     'Visible','on', ...
     'Name','Alocação das Partículas');
 d_min=dx;
@@ -70,15 +82,15 @@ for i=1:size(grid,1) % iterate over row
         index = (i-1)*size(grid,2) + j;
         switch grid(i,j)
             case 1
-                fill(px(index,:)+d_or(index,1)+px(1,2),py(index,:)+py(1,1)+d_or(index,2),cor(index,:),'EdgeColor','none','LineStyle','none');
+                fill(px(index,:)+d_or(index,1)+px(1,2),py(index,:)+py(1,1)+d_or(index,2),cor(clock(i,j)+1,:),'EdgeColor','none','LineStyle','none');
                 hold on
             case 2
                 t=[0:0.1:360]*pi/180;
                 x=r*cos(t)+d_or(index,1);
                 y=r*sin(t)+d_or(index,2);
-                fill(x,y,cor(index,:),'EdgeColor','none','LineStyle','none');
+                fill(x,y,cor(clock(i,j)+1,:),'EdgeColor','none','LineStyle','none');
             otherwise
-                fill(px(index,:)+d_or(index,1)+px(1,2),py(index,:)+py(1,1)+d_or(index,2),cor(index,:),'EdgeColor','none','LineStyle','none');
+                fill(px(index,:)+d_or(index,1)+px(1,2),py(index,:)+py(1,1)+d_or(index,2),cor(clock(i,j)+1,:),'EdgeColor','none','LineStyle','none');
                 hold on
                 
         end

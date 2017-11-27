@@ -33,11 +33,11 @@ for i=1:size(grid,1) % iterate over row
                 px(index,:) =zeros(1,4);
                 py(index,:) = zeros(1,4);
             case 1 % Rectangle
-                d_or(index,:)=[(j-1)*(w+dx)+xshift(i,j) (i-1)*(l+dy)+yshift(i,j) 0];
+                d_or(index,:)=[(j-1)*(w+dx)+xshift(i,j) (i-1)*(l+dy)-yshift(i,j) 0];
                 px(index,:) = px_r;
                 py(index,:) = py_r;
             case 2 % Circle
-                d_or(index,:)=[(j-1)*(w+dx)+xshift(i,j)+w/2 (i-1)*(l+dy)+yshift(i,j)+l/2 0];
+                d_or(index,:)=[(j-1)*(w+dx)+xshift(i,j)+w/2 (i-1)*(l+dy)-yshift(i,j)+l/2 0];
                 px(index,:) = [r 0 0 0];
                 py(index,:) = [r 0 0 0];
             otherwise % set as rectangle
