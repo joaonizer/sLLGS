@@ -104,4 +104,5 @@ src-build/
 plots/
 _*/
 *.bmp
-
+*.gif
+*.jpeg
