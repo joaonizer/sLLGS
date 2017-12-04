@@ -11,39 +11,24 @@ function [obj]=f_obj(x)
 % t2am=7.943e5; % converte T para A/m
 % gammamu0=2.211e5; % (sA/m)-1
 
-part_n=11;
+part_n=3;
 
-platform='lin';
+platform='win';
 %x=[50 100 10 0 0 0 0 ...
 %     50 100 24 -10 0 0 0 ];
 
-w = [50 50 50 50 50 50 50 50 50 50 50];
-l = [100 100 100 100 100 100 100 100 100 100 100];
-th = [ 10 10 10 10 10 10 10 10 10 10 10];
+w = [50 50 50];
+l = [100 100 100];
+th = [ 10 10 10 ];
 
 cortes_y = -1*[
-    0 x(1) -x(1) 0
-    x(2) 0 0 -x(2)
-    0 0 0 10 % AND GATE
-    0 x(5) -x(5) 0
-    x(6) 0 0 -x(6)
-    0 0 0 0
-    0 x(5) -x(5) 0
-    x(6) 0 0 -x(6)
-    0 0 0 0
-    0 x(3) -x(3) 0
-    x(4) 0 0 -x(4)
+    x(1) x(2) -x(2) -x(1)
+    x(3) x(4) -x(4) -x(3)
+    x(5) x(6) -x(6) -x(5) % AND GATE
     ];
 
-dx=[10 10 10 10 10 10 10 10 10 10 10];
-d_or=[0 0 0
-    0 0 0
-    0 0 0
-    0 0 0
-    0 0 0
-    0 0 0
-    0 0 0
-    0 0 0
+dx=[10 10 10];
+d_or=[
     0 0 0
     0 0 0
     0 0 0];
@@ -53,16 +38,9 @@ for i=1:part_n
 end
 d_or=[
     0 0 0
-    60 0 0
-    60 -124 0
-    120 -124 0
-    180 -124 0
-    240 -124 0
-    300 -124 0
-    360 -124 0
-    420 -124 0
-    420 0 0
-    480 0 0];
+    60 124 0
+    120 248 0
+   ];
 %% Computa os tensores
 Nc = zeros(3,3,part_n,part_n);
 % for i=1:part_n-1
@@ -79,20 +57,20 @@ Nc = zeros(3,3,part_n,part_n);
 %     end
 %     %fprintf('\n')
 % end
-i=2;
-j=4;
+i=1;
+j=2;
 [Nc(:,:,i,j), V2]=write_FileDipolar3D_noDAT([px(i,:);px(j,:)], ...
                 [py(i,:);py(j,:)], [th(i);th(j)],...
                 [d_or(j,:);d_or(i,:)], platform);
             K = 4*pi*V2/1e-27;
-i=10;
-j=8;
+i=2;
+j=3;
 [Nc(:,:,i,j), V2]=write_FileDipolar3D_noDAT([px(i,:);px(j,:)], ...
                 [py(i,:);py(j,:)], [th(i);th(j)],...
                 [d_or(j,:);d_or(i,:)], platform);
             K = 4*pi*V2/1e-27;
 
-obj = 2*abs(Nc(2,2,2,4))+2*abs(Nc(2,2,10,8));
+obj = abs(Nc(2,2,1,2))+abs(Nc(2,2,2,3));
 %%
 % d_min=10;
 % cor = [

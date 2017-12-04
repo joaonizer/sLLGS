@@ -5,8 +5,9 @@ days = 380;
 
 energy_per_hour = [7 72 375 1920 9600 25000 60000 120000];
 cost_per_bot = [100 1000 5000 25000 100000 250000 500000 900000 ]; % in diamonds
+payout_rate=[0.01 1 2 3 4 5 6 7];
 owned_bots = zeros(days,8);
-owned_bots(1,:) = [1 0 0 0 0 0 0 0];
+owned_bots(1,:) = [3 0 0 0 0 0 0 0];
 energy_diamond_ratio = 100;
 bonus_rate=50;
 
@@ -16,10 +17,12 @@ bonus_rate=50;
 energy = 0;
 diamonds = zeros(days,1);
 wallet=zeros(days,1);
+payout_balance=zeros(5,days,1);
 for j=1:5%length(cost_per_bot)
 bot_to_buy = j;
 for i=1:days
     energy = energy + sum(owned_bots(i,:).*energy_per_hour)*24;
+    payout_balance(j,i+1)=payout_balance(j,i)+sum(owned_bots(i,:).*payout_rate);
     if energy >= 10000
         energy_sold = energy-mod(energy,300);
         energy = mod(energy,300);
@@ -60,6 +63,9 @@ title('Owned Bots Type 1')
 subplot(2,2,3);
 plot(log10(w))
 title('Diamonds to Sell');
+subplot(2,2,4);
+plot((payout_balance(1,:)'))
+title('Payout Balance');
 
 owned(95,:)
     

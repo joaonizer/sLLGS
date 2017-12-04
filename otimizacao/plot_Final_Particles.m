@@ -1,37 +1,22 @@
 function plot_Final_Particles(x)
-part_n=11;
+part_n=3;
 
-platform='lin';
+platform='win';
 %x=[50 100 10 0 0 0 0 ...
 %     50 100 24 -10 0 0 0 ];
 
-w = [50 50 50 50 50 50 50 50 50 50 50];
-l = [100 100 100 100 100 100 100 100 100 100 100];
-th = [ 10 10 10 10 10 10 10 10 10 10 10];
+w = [50 50 50];
+l = [100 100 100];
+th = [ 10 10 10 ];
 
 cortes_y = -1*[
-    0 x(1) -x(1) 0
-    x(2) 0 0 -x(2)
-    0 0 0 10 % AND GATE
-    0 x(5) -x(5) 0
-    x(6) 0 0 -x(6)
-    0 0 0 0
-    0 x(5) -x(5) 0
-    x(6) 0 0 -x(6)
-    0 0 0 0
-    0 x(3) -x(3) 0
-    x(4) 0 0 -x(4)
+    x(1) x(2) -x(2) -x(1)
+    x(3) x(4) -x(4) -x(3)
+    x(5) x(6) -x(6) -x(5) % AND GATE
     ];
 
-dx=[10 10 10 10 10 10 10 10 10 10 10];
-d_or=[0 0 0
-    0 0 0
-    0 0 0
-    0 0 0
-    0 0 0
-    0 0 0
-    0 0 0
-    0 0 0
+dx=[10 10 10];
+d_or=[
     0 0 0
     0 0 0
     0 0 0];
@@ -41,16 +26,9 @@ for i=1:part_n
 end
 d_or=[
     0 0 0
-    60 0 0
-    60 -124 0
-    120 -124 0
-    180 -124 0
-    240 -124 0
-    300 -124 0
-    360 -124 0
-    420 -124 0
-    420 0 0
-    480 0 0];
+    60 124 0
+    120 248 0
+   ];
 %%
 d_min=10;
 cor = [
@@ -77,7 +55,7 @@ p_a=espaco1*25+espaco2*d_min;
 for i=1:part_n
     fill(px(i,:)+px(1,2)+d_or(i,1),py(i,:)+py(1,2)+d_or(i,2),cor(i,:),'EdgeColor','none','LineStyle','none')
     hold on
-    text(d_or(i,1)+sum(abs(px(i,1:2)))/2,d_or(i,2)+py(i,2),['$P_{' num2str(i) '}$'],'Interpreter','latex','fontsize',9,'FontWeight','bold','Color','black','HorizontalAlignment','Center');
+    text(d_or(i,1)+sum(abs(px(i,1:2)))/2,d_or(i,2)+py(i,2)/2-py(i,3)/2,['$P_{' num2str(i) '}$'],'Interpreter','latex','fontsize',9,'FontWeight','bold','Color','black','HorizontalAlignment','Center');
 end
 
 
