@@ -20,7 +20,7 @@ else
     platform = 'win';
 end
 N = 5000;       % numero de passos
-tempo_total=100e-9;% Tempo total de simulação
+tempo_total=200e-9;% Tempo total de simulação
 alpha=1.0;
 n = [0 1 0];
 T=0;        % Kelvin
@@ -36,7 +36,7 @@ end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-part_n=23; % quantidade de particulas
+part_n=14; % quantidade de particulas
 %%%%%% ^ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%% ^ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -81,18 +81,11 @@ cortes_y=1*[
     25     0     0     -25     % 11
     25    0     0      -25     % 12
     0     0     0   -10     % 13
-    0     0     0   -10     % 14
+    10     0     0   0     % 14
     0     25     -25     0  % 15
     0     25     -25     0  % 16
-%    5    5     -5    -5
-%    5    5     -5    -5
     25     0     0     -25     % 17
     25     0     0     -25     % 18
-    25     0     0     -25     % 19
-    25     0     0      -25     % 20
-    10     0     0     0    % 21
-    0     25     -25     0     % 22
-    25     0     0     -25     % 23
     ];
 % cortes_y=[
 %     0     0     0     0
@@ -135,29 +128,30 @@ end
 %     110     0     0
 %     165     0     0
 %     220     0     0];
-dy=115*[1:6]; %% deslocamentos em y
-offset=0;
+dx=60*[1:6];
+dy=120*[1:6]; %% deslocamentos em y
+offset=25;
 d_or=[
     0     0     0 % P1
     0   dy(2)     0 % P2
-    0   dy(4)+offset     0 % P3
-    0   dy(6)+offset     0 % P4
+    0   dy(4)     0 % P3
+    0   dy(6)     0 % P4
     60     0     0 % P5
     60   dy(2)     0 % P6
-    60   dy(4)+offset     0 % P7
-    60   dy(6)+offset     0 % P8
+    60   dy(4)     0 % P7
+    60   dy(6)     0 % P8
     120     0     0 % P9
     120   dy(2)     0 % P10
-    120   dy(4)+offset     0 % P11
-    120   dy(6)+offset     0 % P12
-    120   dy(1)     0 % P13
-    120   dy(5)+offset     0 % P14
-    180   dy(1)     0 % P15
-    180   dy(5)+offset     0 % P16
+    120   dy(4)     0 % P11
+    120   dy(6)     0 % P12
+    120+offset   dy(1)     0 % P13
+    120+offset   dy(5)     0 % P14
+    180+offset   dy(1)     0 % P15
+    180+offset   dy(5)     0 % P16
     240   dy(1)     0 % P15
-    240   dy(5)+offset     0 % P16
+    240   dy(5)     0 % P16
     300   dy(1)     0 % P17
-    300   dy(5)+offset     0 % P18
+    300   dy(5)     0 % P18
     300   dy(2)     0 % P19
     300   dy(4)     0 % P20
     300   dy(3)     0 % P21
@@ -276,7 +270,7 @@ for jj=1:4
                 0   0   0   0   0   0   N/10 %10
                 0   0   0   0   0   0   N/10 %1
                 ];
-        elseif i<=8
+        elseif i<=12
             cor(i,:)=colors(2,:);
             s=      [
                 0   0   0   a   0   0   N/10 %1
@@ -290,11 +284,11 @@ for jj=1:4
                 0   0   0   0   0   0   N/10 %9
                 0   0   0   0   0   0   N/10 %10
                 ];
-        elseif i<=18
+        elseif i<=14
             cor(i,:)=colors(3,:);
             s=      [
-                0   0   0   a   0   0   N/10 %10
-                a   0   0   a   0   0   N/10 %1
+                0   0   0   0   0   0   N/10 %10
+                0   0   0   a   0   0   N/10 %1
                 a   0   0   a   0   0   N/10 %2
                 a   0   0   0   0   0   N/10 %3
                 0   0   0   0   0   0   N/10 %4
@@ -308,9 +302,9 @@ for jj=1:4
         else
             cor(i,:)=colors(4,:);
             s=  [
-                0   0   0   a   0   0   N/10 %9
-                a   0   0   a   0   0   N/10 %10
-                a   0   0   a   0   0   N/10 %1
+                0   0   0   0   0   0   N/10 %9
+                0   0   0   0   0   0   N/10 %10
+                0   0   0   a   0   0   N/10 %1
                 a   0   0   a   0   0   N/10 %2
                 a   0   0   0   0   0   N/10 %3
                 0   0   0   0   0   0   N/10 %4
@@ -434,21 +428,22 @@ end
 figure('Position',[400 50 300 600], ...
     'Name','Alocação das Partículas');
 
-espaco1=1:2:2*part_n-1;
-espaco2=0:1:part_n-1;
-p_a=espaco1*25+espaco2*d_min;
-
+% espaco1=1:2:2*part_n-1;
+% espaco2=0:1:part_n-1;
+% p_a=espaco1*25+espaco2*d_min;
+%+px(1,2)+d_or(i,1)
+%+py(1,2)+d_or(i,2)
 for i=1:part_n
-    fill(px(i,:)+px(1,2)+d_or(i,1),py(i,:)+py(1,2)+d_or(i,2),cor(i,:),'EdgeColor','none','LineStyle','none')
+    fill(25+px(i,:)+d_or(i,1),50+py(i,:)+d_or(i,2),cor(i,:),'EdgeColor','none','LineStyle','none')
     hold on
-    text(d_or(i,1)+sum(abs(px(i,1:2)))/2,d_or(i,2)+py(i,2),['$P_{' num2str(i) '}$'],'Interpreter','latex','fontsize',9,'FontWeight','bold','Color','black','HorizontalAlignment','Center');
+    text(25+d_or(i,1),50+d_or(i,2),['$P_{' num2str(i) '}$'],'Interpreter','latex','fontsize',9,'FontWeight','bold','Color','black','HorizontalAlignment','Center');
 end
 
 
 daspect([1 1 1])
 title(['XOR Architecture'],'Interpreter','latex')
-ylim([min(d_or(:,2))-25 max(d_or(:,2))+125])
-xlim([min(d_or(:,1))-25 max(d_or(:,1))+75])
+ylim([-24 rows*dy(1)])
+xlim([-10 5*dx(1)])
 xlabel('$nm$','Interpreter','latex')
 ylabel('$nm$','Interpreter','latex')
 sdf('P1');
