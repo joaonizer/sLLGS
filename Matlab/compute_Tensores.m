@@ -15,14 +15,14 @@ fprintf('\nCalculando Tensores de Acoplamento:\n')
 if ~compute_PAR
     for i=1:part_n-1
         fprintf('%d -> ',i)
-        for j=i:part_n
+        for j=1:part_n
             if j~=i
                 fprintf('%d ',j)
                 [Nc(:,:,i,j), V2]=write_FileDipolar3D_noDAT([px(i,:);px(j,:)], ...
                     [py(i,:);py(j,:)], [th(i);th(j)],...
                     [d_or(j,:);d_or(i,:)], platform);
-                K = 4*pi*V2/1e-27;
-                Nc(:,:,j,i)=Nc(:,:,i,j)*K(1)/K(2);
+                %K = 4*pi*V2/1e-27;
+                %Nc(:,:,j,i)=Nc(:,:,i,j)*K(1)/K(2);
             end
         end
         fprintf('\n')

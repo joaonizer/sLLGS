@@ -23,7 +23,7 @@ N = 5000;       % numero de passos
 tempo_total=100e-9;% Tempo total de simulação
 alpha=1.0;
 n = [0 1 0];
-T=0;        % Kelvin
+T=300;        % Kelvin
 Ms=800e3;   % A/m
 kbT=kb*T;   % J
 ti = 0;     % instante inicial da variavel independente
@@ -36,11 +36,11 @@ end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-part_n=24; % quantidade de particulas
+part_n=25; % quantidade de particulas
 %%%%%% ^ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%% ^ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-d_min=10; % distancia mínima entre as partículas
+d_min=15; % distancia mínima entre as partículas
 
 
 alpha_l=1/(1+alpha^2);
@@ -55,11 +55,11 @@ for i=2:part_n % inicializa as partículas de forma antiferromagnetica
 end
 %% Dimensoes da Particula
 
-w=ones(1,part_n)*50;  % width of particles
+w=ones(1,part_n)*60;  % width of particles
 
-l=ones(1,part_n)*100; % length of particles
+l=ones(1,part_n)*90; % length of particles
 
-th=ones(1,part_n)*10;   %thickness of particles
+th=ones(1,part_n)*30;   %thickness of particles
 
 d=[0,ones(1,part_n-1)]*d_min; % distance among particles
 
@@ -108,8 +108,8 @@ cortes_y=[
     0     0     0     0
     0     0     0     0
     0     0     0     0
-    0     0     0   -10
-    10     0     0   0
+    0     0     0     0
+    0     0     0     0
     0     0     0     0
     0     0     0     0
     0     0     0     0
@@ -136,43 +136,35 @@ end
 %     110     0     0
 %     165     0     0
 %     220     0     0];
-dx=60*[0:9];
-dy=120*[0:6]; %% deslocamentos em y
+dx=(w(1)+15)*[0:9];
+dy=(l(1)+15)*[0:6]; %% deslocamentos em y
 offset=50;
 d_or=[
-    dx(1)   dy(1)     0 % P1
-    dx(1)   dy(3)     0 % P2
-    dx(1)   dy(5)     0 % P3
-    dx(1)   dy(7)     0 % P4
-    dx(2)  dy(1)     0 % P5
-    dx(2)   dy(3)     0 % P6
-    dx(2)   dy(5)     0 % P7
-    dx(2)   dy(7)     0 % P8
-    dx(3)  dy(1)     0 % P9
-    dx(3)   dy(3)     0 % P10
-    dx(3)   dy(5)     0 % P11
-    dx(3)   dy(7)     0 % P12
-    dx(4)     dy(1)     0 % P9
-    dx(4)   dy(3)     0 % P10
-    dx(4)   dy(5)     0 % P11
-    dx(4)   dy(7)     0 % P12
-    dx(5)     dy(1)     0 % P9
-    dx(5)   dy(3)     0 % P10
-    dx(5)   dy(5)     0 % P11
-    dx(5)   dy(7)     0 % P12
-    dx(5)+offset   dy(2)     0 % P13
-    dx(5)+offset   dy(6)     0 % P14
-    dx(6)+offset   dy(2)     0 % P15
-    dx(6)+offset   dy(6)     0 % P16
-    dx(6)   dy(2)     0 % P15
-    dx(6)   dy(6)     0 % P16
-    dx(7)   dy(2)     0 % P17
-    dx(7)   dy(6)     0 % P18
-    dx(7)   dy(3)     0 % P19
-    dx(7)   dy(5)     0 % P20
-    dx(7)   dy(4)     0 % P21
-    dx(8)   dy(4)     0 % P22
-    dx(9)   dy(4)     0 % P23
+    dx(1)	dy(2)	0	% P1
+dx(2)	dy(6)	0	% P2
+dx(2)	dy(4)	0	% P3
+dx(2)	dy(2)	0	% P4
+dx(3)	dy(6)	0	% P5
+dx(3)	dy(4)	0	% P6
+dx(3)	dy(3)	0	% P7
+dx(3)	dy(2)	0	% P8
+dx(3)	dy(1)	0	% P9
+dx(4)	dy(7)	0	% P10
+dx(4)	dy(6)	0	% P11
+dx(4)	dy(5)	0	% P12
+dx(4)	dy(4)	0	% P13
+dx(4)	dy(2)	0	% P14
+dx(5)	dy(6)	0	% P15
+dx(5)	dy(2)	0	% P16
+dx(6)	dy(6)	0	% P17
+dx(6)	dy(2)	0	% P18
+dx(7)	dy(6)	0	% P19
+dx(7)	dy(5)	0	% P20
+dx(7)	dy(4)	0	% P21
+dx(7)	dy(3)	0	% P22
+dx(7)	dy(2)	0	% P23
+dx(8)	dy(6)	0	% P24
+dx(8)	dy(4)	0	% P25
     ];
 
 %d_or(13:end,1)=d_or(13:end,1)+25;
@@ -230,49 +222,7 @@ for jj=1:4
         0.4660    0.6740    0.1880  % Verde
         ];
     for i=1:part_n
-        if i==1
-            cor(i,:)=colors(1,:);
-            s=      [
-                0   ex(2)*a   0   0   ex(2)*a   0   N/10 %2
-                0   0   0   0   0   0   N/10 %3
-                0   0   0   0   0   0   N/10 %4
-                0   0   0   0   0   0   N/10 %5
-                0   0   0   0   0   0   N/10 %6
-                0   0   0   0   0   0   N/10 %7
-                0   0   0   0   0   0   N/10 %8
-                0   0   0   0   0   0   N/10 %9
-                0   0   0   0   0   0   N/10 %10
-                0   0   0   0   0   0   N/10 %1
-                ];
-        elseif i==2
-            cor(i,:)=colors(1,:);
-            s=      [
-                0   -1*ex(1)*a   0   0   -1*ex(1)*a   0   N/10 %2
-                0   0   0   0   0   0   N/10 %3
-                0   0   0   0   0   0   N/10 %4
-                0   0   0   0   0   0   N/10 %5
-                0   0   0   0   0   0   N/10 %6
-                0   0   0   0   0   0   N/10 %7
-                0   0   0   0   0   0   N/10 %8
-                0   0   0   0   0   0   N/10 %9
-                0   0   0   0   0   0   N/10 %10
-                0   0   0   0   0   0   N/10 %1
-                ];
-        elseif i==3
-            cor(i,:)=colors(1,:);
-            s=      [
-                0   -1*ex(2)*a   0   0   -1*ex(2)*a   0   N/10 %2
-                0   0   0   0   0   0   N/10 %3
-                0   0   0   0   0   0   N/10 %4
-                0   0   0   0   0   0   N/10 %5
-                0   0   0   0   0   0   N/10 %6
-                0   0   0   0   0   0   N/10 %7
-                0   0   0   0   0   0   N/10 %8
-                0   0   0   0   0   0   N/10 %9
-                0   0   0   0   0   0   N/10 %10
-                0   0   0   0   0   0   N/10 %1
-                ];
-        elseif i==4
+        if (i==10 || i==9) % A in
             cor(i,:)=colors(1,:);
             s=      [
                 0   ex(1)*a   0   0   ex(1)*a   0   N/10 %2
@@ -286,7 +236,49 @@ for jj=1:4
                 0   0   0   0   0   0   N/10 %10
                 0   0   0   0   0   0   N/10 %1
                 ];
-        elseif i<=20
+        elseif (i==2 || i==1) % B in
+            cor(i,:)=colors(1,:);
+            s=      [
+                0   1*ex(2)*a   0   0   1*ex(2)*a   0   N/10 %2
+                0   0   0   0   0   0   N/10 %3
+                0   0   0   0   0   0   N/10 %4
+                0   0   0   0   0   0   N/10 %5
+                0   0   0   0   0   0   N/10 %6
+                0   0   0   0   0   0   N/10 %7
+                0   0   0   0   0   0   N/10 %8
+                0   0   0   0   0   0   N/10 %9
+                0   0   0   0   0   0   N/10 %10
+                0   0   0   0   0   0   N/10 %1
+                ];
+        elseif (i==3) %Cin
+            cor(i,:)=colors(1,:);
+            s=      [
+                0   -a   0   0   -a   0   N/10 %2
+                0   0   0   0   0   0   N/10 %3
+                0   0   0   0   0   0   N/10 %4
+                0   0   0   0   0   0   N/10 %5
+                0   0   0   0   0   0   N/10 %6
+                0   0   0   0   0   0   N/10 %7
+                0   0   0   0   0   0   N/10 %8
+                0   0   0   0   0   0   N/10 %9
+                0   0   0   0   0   0   N/10 %10
+                0   0   0   0   0   0   N/10 %1
+                ];
+        elseif i==1000
+            cor(i,:)=colors(1,:);
+            s=      [
+                0   ex(1)*a   0   0   ex(1)*a   0   N/10 %2
+                0   0   0   0   0   0   N/10 %3
+                0   0   0   0   0   0   N/10 %4
+                0   0   0   0   0   0   N/10 %5
+                0   0   0   0   0   0   N/10 %6
+                0   0   0   0   0   0   N/10 %7
+                0   0   0   0   0   0   N/10 %8
+                0   0   0   0   0   0   N/10 %9
+                0   0   0   0   0   0   N/10 %10
+                0   0   0   0   0   0   N/10 %1
+                ];
+        elseif i<=25
             cor(i,:)=colors(2,:);
             s=      [
                 0   0   0   a   0   0   N/10 %1
@@ -398,17 +390,17 @@ for jj=1:4
     figure('Position',[0 0 1000 1400], ...
         'Name','Magnetizações e Campos Aplicados');
     
-    cols=7; %numero de colunas no plot
+    cols=8; %numero de colunas no plot
     rows=7;%ceil(part_n/cols); % numero de linhas
     plot_place=[
-        43, 29, 15,  1,... 
-        44, 30, 16,  2,... 
-        45, 31, 17,  3,...
-        46, 32, 18,  4,...
-        47, 33, 19,  5,...
-        40, 12, 41, ...
-        13, 42, 14, 35, 21, ...
-        28, 29, 30];
+        41, ... 
+10,26,42, ... 
+11,27,35,43,51, ... 
+4,12,20,28,44, ... 
+13,45, ... 
+14,46, ... 
+15,23,31,39,47, ... 
+16,32];
 
 %     cols=8; %numero de colunas no plot
 %     rows=7;%ceil(part_n/cols); % numero de linhas
@@ -438,7 +430,7 @@ for jj=1:4
         %set(hl,'Orientation','Horizontal','Location','Best')
     end
     sdf('P1');
-    print('-dbmp','-r150',['XOR_' num2str(jj) '.bmp'])
+    print('-dbmp','-r150',['ADDER_' num2str(jj) '.bmp'])
     %close all
 end
 
@@ -461,10 +453,10 @@ end
 daspect([1 1 1])
 title(['XOR Architecture'],'Interpreter','latex')
 ylim([-24 rows*dy(2)])
-xlim([-10 7*dx(2)])
+xlim([-10 8*dx(2)])
 xlabel('$nm$','Interpreter','latex')
 ylabel('$nm$','Interpreter','latex')
 sdf('P1');
-print('-dbmp','-r150',['XOR_Architecture.bmp'])
+print('-dbmp','-r150',['ADDER_Architecture.bmp'])
 % figure
 % stem(1:part_n,round(squeeze(m(5001,2,:))))
