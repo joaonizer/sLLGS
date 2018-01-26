@@ -21,9 +21,9 @@ set(h,'PaperOrientation','portrait');
 set(h,'PaperSize',[H,W])
 set(h,'PaperPosition',[0,0,W,H])
     text_font_size=18;
-    plot_linewidth=4;
+    plot_linewidth=1;
     axis_linewidth=4;
-    for j=1:part_n
+    for j=1:1%part_n
         %subplot(rows,cols,plot_place(j));
         plot(t,squeeze(m(:,1:3,j)),'linewidth',plot_linewidth); % Plota a MagnetizaÃ§Ã£o
         hold on
@@ -50,6 +50,6 @@ set(h,'PaperPosition',[0,0,W,H])
     %sdf('P1');
     
     %print( '-dpdfwrite', ['XOR_' num2str(jj) '.pdf'])
-    print( '-dpng', '-r100' ,['XOR_' num2str(jj) '.png'])
+    print( '-dpng', '-r300' ,['XOR_' num2str(jj) '.png'])
     close all
 end
