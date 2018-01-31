@@ -21,7 +21,7 @@ else
     platform = 'win';
 end
 N = 10000;       % numero de passos
-tempo_total=10e-9;% Tempo total de simulaÃ§Ã£o
+tempo_total=1e-9;% Tempo total de simulaÃ§Ã£o
 alpha=1;%;0.054;
 n = [0 1 0];
 T=300;        % Kelvin
@@ -157,7 +157,7 @@ i_s=zeros(N+1,3,part_n);
 cor=zeros(part_n,3);
 for jj=1:1
     h_app=zeros(N+1,3,part_n);
-    a=1*150e-3; % T
+    a=0*150e-3; % T
     
     % EXP tem todas as combinaÃ§Ãµes de entradas
     %    X  Y
@@ -302,11 +302,13 @@ for jj=1:1
     %sig=sqrt(2*alpha*kb*T/gammamu0/mu0/Ms/V(1)/time_step)/Ms; % old version
     sig=sqrt(2*alpha*kb*T/mu0/Ms/Ms/V(1)); % new
     %version
-    hT=zeros(N+1,3,part_n);
+    dW=zeros(N+1,3,part_n);
+    v = zeros(3,part_n);
     for j=1:part_n
-        rng(j);
-        hhT=(randn(N+1,3));
-        hT(:,:,j)=sig*hhT*sqrt(V(1)/V(j));
+        rng(j+1);
+        dW(2:end,:,j)=(randn(N,3));
+        %hT(:,:,j)=sig*hhT*sqrt(V(1)/V(j));
+        v(:,j)=[sig sig sig]*sqrt(V(1)/V(j));
     end
     %% Metodo para solucao numerica
     fprintf('\n------------------------------------\n');
@@ -342,9 +344,10 @@ for jj=1:1
             +squeeze(hd(i,:,:)) ...
             +squeeze(hc(i,:,:));                    % Campo de Acoplamento (adimensional)
         % Range-Kuta-4
-        m(i+1,:,:)=rk4(squeeze(m(i,:,:)),squeeze(h_eff(i,:,:)),squeeze(hT(i,:,:)),squeeze(i_s(i,:,:)),dt);
-         
-
+        % m(i+1,:,:)=rk4(squeeze(m(i,:,:)),squeeze(h_eff(i,:,:)),squeeze(hT(i,:,:)),squeeze(i_s(i,:,:)),dt);
+        % RK_SDE
+        m(i+1,:,:)=rk_sde(squeeze(m(i,:,:)),squeeze(h_eff(i,:,:)),squeeze(i_s(i,:,:)), v, dt,squeeze(dW(i,:,:)));
+        %m(i+1,:,:)=m(i+1,:,:)./sqrt(sum(m(i+1,:,:).^2));
     end
     toc;
     dispstat('Finished.','keepprev');
@@ -358,3 +361,6 @@ for jj=1:1
     plot_M_and_H(m,h_app,t,part_n,a,jj,cols,rows,cor,grid);
     plot_Particles(px,py,d_or,dx,dy,cor,jj,rows,cols,angles);
 end
+
+mag_m1=1-sqrt(m(:,1,1).^2+m(:,2,1).^2+m(:,3,1).^2);
+plot(mag_m1)
