@@ -20,11 +20,11 @@ if strcmp(computer,'GLNXA64')
 else
     platform = 'win';
 end
-N = 10000;       % numero de passos
-tempo_total=1e-9;% Tempo total de simulaÃ§Ã£o
+N = 100000;       % numero de passos
+tempo_total=100e-9;% Tempo total de simulaÃ§Ã£o
 alpha=1;%;0.054;
-n = [0 1 0];
-T=300;        % Kelvin
+n = [0 1 0]/sqrt(1);
+T=0;        % Kelvin
 Ms=800e3;   % A/m
 kbT=kb*T;   % J
 ti = 0;     % instante inicial da variavel independente
@@ -34,15 +34,15 @@ if time_step>1e-12*alpha
     warning('Time_Step muito grande! Considere aumentar N!')
 end
 %% Configuracoes do Sistema
-
+name='Fanout12';
 grid=[
-        1 0
-        0   1
-%           0   0   1   1 1      
-%           0   0   1   0 0     
-%           1   1   1   0 0       
-%           0   0   1   0 0   
-%           0   0   1   1 1  
+%         1 0
+%         0   1
+          0   0   1   1 1      
+          0   0   1   0 0     
+          1   1   1   0 0       
+          0   0   1   0 0   
+          0   0   1   1 1  
           
 %     1   1   1 0  0   0   0 
 %     0   0   2 1  1   0   0
@@ -102,8 +102,8 @@ end
 for i=1:length(w)
     [px(i,:),py(i,:)]=write_Pontos(w,l,cortes_y(i,:),i);
 end
-dx=(w(1)+100)*[0:50];
-dy=(l(1)+100)*[0:50]; %% deslocamentos em y
+dx=(w(1)+10)*[0:50];
+dy=(l(1)+25)*[0:50]; %% deslocamentos em y
 offset=0;
 count=1;
 for i=1:mm
@@ -157,7 +157,7 @@ i_s=zeros(N+1,3,part_n);
 cor=zeros(part_n,3);
 for jj=1:1
     h_app=zeros(N+1,3,part_n);
-    a=0*150e-3; % T
+    a=1*150e-3; % T
     
     % EXP tem todas as combinaÃ§Ãµes de entradas
     %    X  Y
@@ -300,7 +300,7 @@ for jj=1:1
     %sig=sqrt(2*alpha*kbT/mu0/V(1)/dt)/Ms;
     
     %sig=sqrt(2*alpha*kb*T/gammamu0/mu0/Ms/V(1)/time_step)/Ms; % old version
-    sig=sqrt(2*alpha*kb*T/mu0/Ms/Ms/V(1)); % new
+    sig=sqrt(2*alpha*kb*T/mu0/Ms/Ms/V(1))*sqrt(dt); % new
     %version
     dW=zeros(N+1,3,part_n);
     v = zeros(3,part_n);
@@ -358,8 +358,9 @@ for jj=1:1
     angles=m(end-10,2,:)*90;
     cols=mm; %numero de colunas no plot
     rows=nn; %ceil(part_n/cols); % numero de linhas
-    plot_M_and_H(m,h_app,t,part_n,a,jj,cols,rows,cor,grid);
-    plot_Particles(px,py,d_or,dx,dy,cor,jj,rows,cols,angles);
+    eps=1;
+    plot_M_and_H(m,h_app,t,part_n,a,jj,cols,rows,cor,grid,name,eps);
+    plot_Particles(px,py,d_or,dx,dy,cor,jj,rows,cols,angles,name,eps);
 end
 
 mag_m1=1-sqrt(m(:,1,1).^2+m(:,2,1).^2+m(:,3,1).^2);

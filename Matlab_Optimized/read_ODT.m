@@ -35,7 +35,7 @@ end
 %data=y;
 %maxM=max(max(abs(data(50:numel(x)-6,19:21))));
 data=[
-    data(:,20)... % STAGE
+    data(:,25)... % STAGE
     data(:,21), data(:,22), data(:,23)... % M (Magnetization)
     data(:,15), data(:,16), data(:,17)... % B (Zeeman Field)
     data(:,12), data(:, 1)... % Demag e Total Energy

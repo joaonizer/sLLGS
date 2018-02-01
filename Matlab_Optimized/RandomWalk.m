@@ -21,7 +21,7 @@ x=(cumsum(randn(1,N)));
 y=(cumsum(randn(1,N)));
 z=(cumsum(randn(1,N)));
 
-subplot(1,2,1);
+%subplot(1,2,1);
 view(3);
 set(gca,'GridLineStyle','--')
 hold on;
@@ -40,7 +40,7 @@ rf=[x(end) y(end) z(end)];
 plot3(r0(1),r0(2),r0(3),'or','MarkerFaceColor','r');
 plot3(rf(1),rf(2),rf(3),'ok','MarkerFaceColor','k');
 
-
+legend('Wiener Process','Initial Point' , 'Final Point')
 
 % Line of Sight between initial and final state
 %xx=linspace(r0(1),rf(1),10);
@@ -55,16 +55,16 @@ Information=strcat('Three dimensional Brownian Motion, d=',num2str(d),' units');
 title(Information ,'FontWeight','bold');
 view(-109,58);
 
-subplot(1,2,2);
-set(gca,'GridLineStyle','--')
-hold on;
-time=0:length(x)-1;
-plot(time,sqrt(x.^2+y.^2+z.^2),'LineWidth',1.5)
-hold on
-plot(time,sqrt(time),'LineWidth',1.5)
-xlabel('Time Step');
-ylabel('Displacement Squared');
-title('Displacement Squared versus Time')
+% subplot(1,2,2);
+% set(gca,'GridLineStyle','--')
+% hold on;
+% time=0:length(x)-1;
+% plot(time,sqrt(x.^2+y.^2+z.^2),'LineWidth',1.5)
+% hold on
+% plot(time,sqrt(time),'LineWidth',1.5)
+% xlabel('Time Step');
+% ylabel('Displacement Squared');
+% title('Displacement Squared versus Time')
 
 
 end

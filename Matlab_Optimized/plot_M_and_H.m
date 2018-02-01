@@ -1,4 +1,4 @@
-function []=plot_M_and_H(m,h_app,t,part_n,a,jj,cols,rows,cor,grid)
+function []=plot_M_and_H(m,h_app,t,part_n,a,jj,cols,rows,cor,grid,name,eps)
 
 %% Plot Place
 nn=size(grid,1);
@@ -23,8 +23,8 @@ set(h,'PaperPosition',[0,0,W,H])
     text_font_size=18;
     plot_linewidth=1;
     axis_linewidth=2;
-    for j=1:1%part_n
-        %subplot(rows,cols,plot_place(j));
+    for j=1:part_n
+        subplot(rows,cols,plot_place(j));
         plot(t,squeeze(m(:,1:3,j)),'linewidth',plot_linewidth); % Plota a MagnetizaÃ§Ã£o
         hold on
         plot(t,squeeze(h_app(:,1:2,j))/a,'--','linewidth',plot_linewidth); % Plota o Campo aplicado em X (1) normalizado por a
@@ -50,6 +50,10 @@ set(h,'PaperPosition',[0,0,W,H])
     %sdf('P1');
     
     %print( '-dpdfwrite', ['XOR_' num2str(jj) '.pdf'])
-    print( '-dpng', '-r300' ,['XOR_' num2str(jj) '.png'])
+    if ~eps
+    print( '-dpng', '-r300' ,[name '_' num2str(jj) '.png'])
+    else
+        print( '-depsc', [name '_' num2str(jj) '.eps'])
+    end
     close all
 end
