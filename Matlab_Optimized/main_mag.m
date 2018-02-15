@@ -20,11 +20,11 @@ if strcmp(computer,'GLNXA64')
 else
     platform = 'win';
 end
-N = 100000;       % numero de passos
-tempo_total=100e-9;% Tempo total de simulaÃ§Ã£o
+N = 10000;       % numero de passos
+tempo_total=1e-9;% Tempo total de simulaÃ§Ã£o
 alpha=1;%;0.054;
 n = [0 1 0]/sqrt(1);
-T=0;        % Kelvin
+T=300;        % Kelvin
 Ms=800e3;   % A/m
 kbT=kb*T;   % J
 ti = 0;     % instante inicial da variavel independente
@@ -33,26 +33,29 @@ time_step=dt/(gammamu0*Ms); % segundos
 if time_step>1e-12*alpha
     warning('Time_Step muito grande! Considere aumentar N!')
 end
+result_rk_up=zeros(N+1,3);
+result_rk_down=result_rk_up;
+count_up=0;
 %% Configuracoes do Sistema
 name='Fanout12';
 grid=[
-%         1 0
-%         0   1
-          0   0   1   1 1      
-          0   0   1   0 0     
-          1   1   1   0 0       
-          0   0   1   0 0   
-          0   0   1   1 1  
-          
-%     1   1   1 0  0   0   0 
-%     0   0   2 1  1   0   0
-%     1   1   1 0  1   0   0
-%     0   0   0 0  1   0   0
-%     0   0   0 0  3   1   1
-%     0   0   0 0  1   0   0
-%     1   1   1 0  1   0   0
-%     0   0   2 1  1   0   0
-%     1   1   1 0  0   0   0
+    3 0
+    0   3
+    %           0   0   1   1 1
+    %           0   0   1   0 0
+    %           1   1   1   0 0
+    %           0   0   1   0 0
+    %           0   0   1   1 1
+    
+    %     1   1   1 0  0   0   0
+    %     0   0   2 1  1   0   0
+    %     1   1   1 0  1   0   0
+    %     0   0   0 0  1   0   0
+    %     0   0   0 0  3   1   1
+    %     0   0   0 0  1   0   0
+    %     1   1   1 0  1   0   0
+    %     0   0   2 1  1   0   0
+    %     1   1   1 0  0   0   0
     ];
 part_n=sum(sum(grid>0)); % quantidade de particulas
 
@@ -93,7 +96,7 @@ for i=1:mm
             cortes_y(count,:)=[0 0 0 -10];
             count=count+1;
         elseif grid(j,i)==3 %or
-            cortes_y(count,:)=[10 0 0 0];
+            cortes_y(count,:)=[20 0 0 0];
             count=count+1;
         end
     end
@@ -102,8 +105,8 @@ end
 for i=1:length(w)
     [px(i,:),py(i,:)]=write_Pontos(w,l,cortes_y(i,:),i);
 end
-dx=(w(1)+10)*[0:50];
-dy=(l(1)+25)*[0:50]; %% deslocamentos em y
+dx=(w(1)+1000)*[0:50];
+dy=(l(1)+2500)*[0:50]; %% deslocamentos em y
 offset=0;
 count=1;
 for i=1:mm
@@ -155,9 +158,9 @@ i_s=zeros(N+1,3,part_n);
 
 %% Campo Aplicado
 cor=zeros(part_n,3);
-for jj=1:1
+for jj=1:100
     h_app=zeros(N+1,3,part_n);
-    a=1*150e-3; % T
+    a=0*150e-3; % T
     
     % EXP tem todas as combinaÃ§Ãµes de entradas
     %    X  Y
@@ -168,7 +171,7 @@ for jj=1:1
         ];
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    ex=experiment(jj,:); % testa a primeira combinaÃ§Ã£o de 8 possibilidades
+    ex=experiment(1,:); % testa a primeira combinaÃ§Ã£o de 8 possibilidades
     %%%%%% ^ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     colors = [
         0.4940    0.1840    0.5560  % Roxo
@@ -305,12 +308,13 @@ for jj=1:1
     dW=zeros(N+1,3,part_n);
     v = zeros(3,part_n);
     for j=1:part_n
-        rng(j+1);
+        rng(jj);
         dW(2:end,:,j)=(randn(N,3));
         %hT(:,:,j)=sig*hhT*sqrt(V(1)/V(j));
         v(:,j)=[sig sig sig]*sqrt(V(1)/V(j));
     end
     %% Metodo para solucao numerica
+    clc
     fprintf('\n------------------------------------\n');
     fprintf('            Range-Kutta            \n');
     fprintf('------------------------------------\n');
@@ -359,9 +363,15 @@ for jj=1:1
     cols=mm; %numero de colunas no plot
     rows=nn; %ceil(part_n/cols); % numero de linhas
     eps=1;
-    plot_M_and_H(m,h_app,t,part_n,a,jj,cols,rows,cor,grid,name,eps);
-    plot_Particles(px,py,d_or,dx,dy,cor,jj,rows,cols,angles,name,eps);
+    %plot_M_and_H(m,h_app,t,part_n,a,jj,cols,rows,cor,grid,name,eps);
+    %plot_Particles(px,py,d_or,dx,dy,cor,jj,rows,cols,angles,name,eps);
+    if m(end,2,1)>0
+        count_up=count_up+1;
+        result_rk_up=result_rk_up+squeeze(m(:,:,1));
+    else
+        result_rk_down=result_rk_down+squeeze(m(:,:,1));
+        
+    end
 end
-
-mag_m1=1-sqrt(m(:,1,1).^2+m(:,2,1).^2+m(:,3,1).^2);
-plot(mag_m1)
+%mag_m1=1-sqrt(m(:,1,1).^2+m(:,2,1).^2+m(:,3,1).^2);
+%plot(mag_m1)
