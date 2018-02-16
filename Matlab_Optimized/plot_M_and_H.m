@@ -23,8 +23,8 @@ set(h,'PaperPosition',[0,0,W,H])
     text_font_size=18;
     plot_linewidth=1;
     axis_linewidth=2;
-    for j=1:part_n
-        subplot(rows,cols,plot_place(j));
+    for j=1:1%part_n
+        %subplot(rows,cols,plot_place(j));
         plot(t,squeeze(m(:,1:3,j)),'linewidth',plot_linewidth); % Plota a MagnetizaÃ§Ã£o
         hold on
         plot(t,squeeze(h_app(:,1:2,j))/a,'--','linewidth',plot_linewidth); % Plota o Campo aplicado em X (1) normalizado por a

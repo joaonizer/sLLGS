@@ -12,7 +12,6 @@ mm_heff = cross(m,m_heff);
 
 a=-alpha_l*(m_heff+mm_is+alpha*(mm_heff-m_is))-alpha_l*v.^2.*m; %a
 
-
 % Difusion Term
 m_v = cross(m,v);
 

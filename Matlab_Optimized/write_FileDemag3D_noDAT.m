@@ -31,9 +31,11 @@ data_p=[
     ];
 
 if strcmp(platform,'lin')
-    [flag,Nstr]=system(['echo '' ' data_p ' '' | ./Fortran/demag3D3_noDAT']); % roda o executavel para gerar o OUT_demag3D2
+    %[flag,Nstr]=system(['echo '' ' data_p ' '' | ./Fortran/demag3D3_noDAT']); % roda o executavel para gerar o OUT_demag3D2
+    [flag,Nstr]=system(['echo '' ' data_p ' '' | ./Cpp/demag_cut']); % roda o executavel para gerar o OUT_demag3D2
 else
-    [flag,Nstr]=system(['echo ' data_p ' | .\Fortran\demag3D3_noDAT.exe']); % no single quotes for windows
+    %[flag,Nstr]=system(['echo ' data_p ' | .\Fortran\demag3D3_noDAT.exe']); % no single quotes for windows
+    [flag,Nstr]=system(['echo ' data_p ' | .\Cpp\demag_cut.exe']); % no single quotes for windows
 end
 %% Leitura e Normaliza��o do Tensor
 % Calculo do Volume

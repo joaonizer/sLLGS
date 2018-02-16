@@ -22,9 +22,9 @@ else
 end
 N = 10000;       % numero de passos
 tempo_total=1e-9;% Tempo total de simulaÃ§Ã£o
-alpha=1;%;0.054;
+alpha=0.05;%;0.054;
 n = [0 1 0]/sqrt(1);
-T=300;        % Kelvin
+T=0;        % Kelvin
 Ms=800e3;   % A/m
 kbT=kb*T;   % J
 ti = 0;     % instante inicial da variavel independente
@@ -37,7 +37,7 @@ result_rk_up=zeros(N+1,3);
 result_rk_down=result_rk_up;
 count_up=0;
 %% Configuracoes do Sistema
-name='Fanout12';
+name='Teste_new_demag_cut';
 grid=[
     3 0
     0   3
@@ -96,7 +96,7 @@ for i=1:mm
             cortes_y(count,:)=[0 0 0 -10];
             count=count+1;
         elseif grid(j,i)==3 %or
-            cortes_y(count,:)=[20 0 0 0];
+            cortes_y(count,:)=[30 0 0 0];
             count=count+1;
         end
     end
@@ -120,7 +120,7 @@ end
 
 %% Compute Tensores
 compute_NCND=1; % If TRUE computes the tensors again
-compute_PAR=1; % If TRUE uses paralel parfor to compute coupling tensor
+compute_PAR=0; % If TRUE uses paralel parfor to compute coupling tensor
 
 if compute_NCND
     Nd=sparse(3*part_n,3*part_n);
@@ -158,7 +158,7 @@ i_s=zeros(N+1,3,part_n);
 
 %% Campo Aplicado
 cor=zeros(part_n,3);
-for jj=1:100
+for jj=1:1
     h_app=zeros(N+1,3,part_n);
     a=0*150e-3; % T
     
@@ -297,7 +297,7 @@ for jj=1:100
         h_app(:,:,i)=compute_Happ(N,s); % aplicado
     end
     %% Campo TÃ©rmico
-    K1=500;
+    K1=0;
     HkMs=2*K1/Ms/mu0/Ms;
     % dt (adimensional) --> dt_real = dt/gammamu0*Ms
     %sig=sqrt(2*alpha*kbT/mu0/V(1)/dt)/Ms;
@@ -362,9 +362,9 @@ for jj=1:100
     angles=m(end-10,2,:)*90;
     cols=mm; %numero de colunas no plot
     rows=nn; %ceil(part_n/cols); % numero de linhas
-    eps=1;
-    %plot_M_and_H(m,h_app,t,part_n,a,jj,cols,rows,cor,grid,name,eps);
-    %plot_Particles(px,py,d_or,dx,dy,cor,jj,rows,cols,angles,name,eps);
+    eps=0;
+    plot_M_and_H(m,h_app,t,part_n,a,jj,cols,rows,cor,grid,name,eps);
+    plot_Particles(px,py,d_or,dx,dy,cor,jj,rows,cols,angles,name,eps);
     if m(end,2,1)>0
         count_up=count_up+1;
         result_rk_up=result_rk_up+squeeze(m(:,:,1));
@@ -373,5 +373,5 @@ for jj=1:100
         
     end
 end
-%mag_m1=1-sqrt(m(:,1,1).^2+m(:,2,1).^2+m(:,3,1).^2);
-%plot(mag_m1)
+mag_m1=1-sqrt(m(:,1,1).^2+m(:,2,1).^2+m(:,3,1).^2);
+plot(t,mag_m1);
