@@ -6,19 +6,19 @@ function [m_new]=rk4(m,h_eff,hT,i_s,dt)
 %   i_s - spin current applied to the particle
 %   dt - normalized time step
 
-drift_term=dm_drift(m,hT);
+%difusion_term=dm_difusion(m,hT);
 
 % Step 1
 k(1,:,:)=dm(m,h_eff,i_s);
-mm(1,:,:)=m+squeeze(k(1,:,:))*dt/2+drift_term/2;
+mm(1,:,:)=m+squeeze(k(1,:,:))*dt/2;
 
 % Step 2
 k(2,:,:)=dm(squeeze(mm(1,:,:)),h_eff,i_s);
-mm(2,:,:)=m+squeeze(k(2,:,:))*dt/2+drift_term/2;
+mm(2,:,:)=m+squeeze(k(2,:,:))*dt/2;
 
 % Step 3
 k(3,:,:)=dm(squeeze(mm(2,:,:)),h_eff,i_s);
-mm(3,:,:)=m+squeeze(k(3,:,:))*dt+drift_term;
+mm(3,:,:)=m+squeeze(k(3,:,:))*dt;
 
 % Step 4
 k(4,:,:)=dm(squeeze(mm(3,:,:)),h_eff,i_s);

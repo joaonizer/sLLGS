@@ -20,8 +20,9 @@ if strcmp(computer,'GLNXA64')
 else
     platform = 'win';
 end
+
 N = 10000;       % numero de passos
-tempo_total=1e-9;% Tempo total de simulaÃ§Ã£o
+tempo_total=10e-9;% Tempo total de simulaÃ§Ã£o
 alpha=0.05;%;0.054;
 n = [0 1 0]/sqrt(1);
 T=0;        % Kelvin
@@ -37,10 +38,10 @@ result_rk_up=zeros(N+1,3);
 result_rk_down=result_rk_up;
 count_up=0;
 %% Configuracoes do Sistema
-name='Teste_new_demag_cut';
+name=['test-' num2str(T) 'K-' num2str(N) 'steps-' num2str(tempo_total*1e9) 'ns-' num2str(alpha*100) 'alpha-force-module'];
 grid=[
-    3 0
-    0   3
+    1 0
+    0   1
     %           0   0   1   1 1
     %           0   0   1   0 0
     %           1   1   1   0 0
@@ -310,7 +311,7 @@ for jj=1:1
     for j=1:part_n
         rng(jj);
         dW(2:end,:,j)=(randn(N,3));
-        %hT(:,:,j)=sig*hhT*sqrt(V(1)/V(j));
+        hT(:,:,j)=sig*dW(:,:,j)*sqrt(V(1)/V(j));
         v(:,j)=[sig sig sig]*sqrt(V(1)/V(j));
     end
     %% Metodo para solucao numerica
@@ -350,7 +351,7 @@ for jj=1:1
         % Range-Kuta-4
         % m(i+1,:,:)=rk4(squeeze(m(i,:,:)),squeeze(h_eff(i,:,:)),squeeze(hT(i,:,:)),squeeze(i_s(i,:,:)),dt);
         % RK_SDE
-        m(i+1,:,:)=rk_sde(squeeze(m(i,:,:)),squeeze(h_eff(i,:,:)),squeeze(i_s(i,:,:)), v, dt,squeeze(dW(i,:,:)));
+         m(i+1,:,:)=rk_sde(squeeze(m(i,:,:)),squeeze(h_eff(i,:,:)),squeeze(i_s(i,:,:)), v, dt,squeeze(dW(i,:,:)));
         %m(i+1,:,:)=m(i+1,:,:)./sqrt(sum(m(i+1,:,:).^2));
     end
     toc;
@@ -364,7 +365,7 @@ for jj=1:1
     rows=nn; %ceil(part_n/cols); % numero de linhas
     eps=0;
     plot_M_and_H(m,h_app,t,part_n,a,jj,cols,rows,cor,grid,name,eps);
-    plot_Particles(px,py,d_or,dx,dy,cor,jj,rows,cols,angles,name,eps);
+    %plot_Particles(px,py,d_or,dx,dy,cor,jj,rows,cols,angles,name,eps);
     if m(end,2,1)>0
         count_up=count_up+1;
         result_rk_up=result_rk_up+squeeze(m(:,:,1));
@@ -373,5 +374,12 @@ for jj=1:1
         
     end
 end
-mag_m1=1-sqrt(m(:,1,1).^2+m(:,2,1).^2+m(:,3,1).^2);
-plot(t,mag_m1);
+% mag_m1=1-sqrt(m(:,1,1).^2+m(:,2,1).^2+m(:,3,1).^2);
+% plot(t,mag_m1);
+% title(name)
+% print( '-dpng', '-r300' ,[name '-magModule' '.png'])
+% m_exp(1:N+1,:,NN)=squeeze(m(:,:,1));
+% m_mod_exp(1:N+1,NN)=mag_m1;
+% save([name 'variable' num2str(force_module) '.mat'],'m_exp','m_mod_exp');
+
+
