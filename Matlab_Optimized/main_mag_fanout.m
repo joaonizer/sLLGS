@@ -21,8 +21,8 @@ else
     platform = 'win';
 end
 
-N = 100000;       % numero de passos
-tempo_total=100e-9;% Tempo total de simulaÃ§Ã£o
+N = 60000;       % numero de passos
+tempo_total=60e-9;% Tempo total de simulaÃ§Ã£o
 alpha=0.05;%;0.054;
 n = [0 1 0]/sqrt(1);
 T=300;        % Kelvin
@@ -38,15 +38,27 @@ result_rk_up=zeros(N+1,3);
 result_rk_down=result_rk_up;
 count_up=0;
 %% Configuracoes do Sistema
-name=['test-' num2str(T) 'K-' num2str(N) 'steps-' num2str(tempo_total*1e9) 'ns-' num2str(alpha*100) 'alpha-force-module'];
+name=['fan3-' num2str(T) 'K-' num2str(N) 'steps-' num2str(tempo_total*1e9) 'ns-' num2str(alpha*100) 'alpha'];
 grid=[
 %     1 0
 %     0   1
-              0   0   1   1 1
-              0   0   1   0 0
-              1   1   1   0 0
-              0   0   1   0 0
-              0   0   1   1 1
+%               0   0   1   1 1
+%               0   0   1   0 0
+%               1   1   1   0 0
+%               0   0   1   0 0
+%               0   0   1   1 1
+
+%          0 0  0  0   0   1   1 1
+%          0 0  0  0   0   1   0 0
+%          1 1  1  1   1   1   0 0
+%          0 0  0  0   0   1   0 0
+%          0 0  0  0   0   1   1 1
+         
+         0 0  0  0   0   1   1 1
+         0 0  0  0   0   1   0 0
+         1 4  5  4   5   4   0 0
+         0 0  0  0   0   1   0 0
+         0 0  0  0   0   1   1 1
     
     %     1   1   1 0  0   0   0
     %     0   0   2 1  1   0   0
@@ -97,7 +109,13 @@ for i=1:mm
             cortes_y(count,:)=[0 0 0 -10];
             count=count+1;
         elseif grid(j,i)==3 %or
-            cortes_y(count,:)=[30 0 0 0];
+            cortes_y(count,:)=[10 0 0 0];
+            count=count+1;
+        elseif grid(j,i)==4 %and
+            cortes_y(count,:)=[0 10 -10 0];
+            count=count+1;
+        elseif grid(j,i)==5 %or
+            cortes_y(count,:)=[10 0 0 -10];
             count=count+1;
         end
     end
@@ -159,7 +177,7 @@ i_s=zeros(N+1,3,part_n);
 
 %% Campo Aplicado
 cor=zeros(part_n,3);
-for jj=1:1
+for jj=2:2
     h_app=zeros(N+1,3,part_n);
     a=1*150e-3; % T
     
@@ -172,7 +190,7 @@ for jj=1:1
         ];
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    ex=experiment(1,:); % testa a primeira combinaÃ§Ã£o de 8 possibilidades
+    ex=experiment(jj,:); % testa a primeira combinaÃ§Ã£o de 8 possibilidades
     %%%%%% ^ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     colors = [
         0.4940    0.1840    0.5560  % Roxo
@@ -181,118 +199,46 @@ for jj=1:1
         0.4660    0.6740    0.1880  % Verde
         ];
     for i=1:part_n
-        if (i==100) % X in
+        if (i==1) % Ybar in
             cor(i,:)=colors(1,:);
             s=      [
-                0   ex(1)*a   0   a   ex(1)*a   0   N/10 %2
-                a   ex(1)*a   0   a   ex(1)*a   0   N/10 %2
-                a   ex(1)*a   0   0   ex(1)*a   0   N/10 %2
-                0   ex(1)*a   0   0   ex(1)*a   0   N/10 %2
-                0   0   0   0   0   0   N/10 %6
-                0   0   0   0   0   0   N/10 %7
-                0   0   0   0   0   0   N/10 %8
-                0   0   0   0   0   0   N/10 %9
-                0   0   0   0   0   0   N/10 %10
-                0   0   0   0   0   0   N/10 %1
+                0   -ex(2)*a   0   a   -ex(2)*a   0   N/6 %2
+                a   -ex(2)*a   0   a   -ex(2)*a   0   N/6 %2
+                a   -ex(2)*a   0   0   -ex(2)*a   0   N/6 %2
+                0   -ex(2)*a   0   0   -ex(2)*a   0   N/6 %2
+                0   0   0   0   0   0   N/6 %6
+                0   0   0   0   0   0   N/6 %7
                 ];
-        elseif (i==1) % Ybar in
-            cor(i,:)=colors(1,:);
-            s=      [
-                0   -ex(2)*a   0   a   -ex(2)*a   0   N/10 %2
-                a   -ex(2)*a   0   a   -ex(2)*a   0   N/10 %2
-                a   -ex(2)*a   0   0   -ex(2)*a   0   N/10 %2
-                0   -ex(2)*a   0   0   -ex(2)*a   0   N/10 %2
-                0   0   0   0   0   0   N/10 %6
-                0   0   0   0   0   0   N/10 %7
-                0   0   0   0   0   0   N/10 %8
-                0   0   0   0   0   0   N/10 %9
-                0   0   0   0   0   0   N/10 %10
-                0   0   0   0   0   0   N/10 %1
-                ];
-        elseif (i==300) %Xbar in
-            cor(i,:)=colors(1,:);
-            s=      [
-                0   -ex(1)*a   0   a   -ex(1)*a   0   N/10 %2
-                a   -ex(1)*a   0   a   -ex(1)*a   0   N/10 %2
-                a   -ex(1)*a   0   0   -ex(1)*a   0   N/10 %2
-                0   -ex(1)*a   0   0   -ex(1)*a   0   N/10 %2
-                0   0   0   0   0   0   N/10 %6
-                0   0   0   0   0   0   N/10 %7
-                0   0   0   0   0   0   N/10 %8
-                0   0   0   0   0   0   N/10 %9
-                0   0   0   0   0   0   N/10 %10
-                0   0   0   0   0   0   N/10 %1
-                ];
-        elseif i==400 %Y in
-            cor(i,:)=colors(1,:);
-            s=      [
-                0   ex(2)*a   0   a   ex(2)*a   0   N/10 %2
-                a   ex(2)*a   0   a   ex(2)*a   0   N/10 %2
-                a   ex(2)*a   0   0   ex(2)*a   0   N/10 %2
-                0   ex(2)*a   0   0   ex(2)*a   0   N/10 %2
-                0   0   0   0   0   0   N/10 %6
-                0   0   0   0   0   0   N/10 %7
-                0   0   0   0   0   0   N/10 %8
-                0   0   0   0   0   0   N/10 %9
-                0   0   0   0   0   0   N/10 %10
-                0   0   0   0   0   0   N/10 %1
-                ];
-        elseif (sum(i==[2 5]))
-            cor(i,:)=colors(1,:);
-            s=      [
-                0   0   0   a   0   0   N/10 %1
-                a   0   0   a   0   0   N/10 %2
-                a   0   0   0   0   0   N/10 %3
-                0   0   0   0   0   0   N/10 %4
-                0   0   0   a   0   0   N/10 %5
-                a   0   0   a   0   0   N/10 %6
-                a   0   0   0   0   0   N/10 %7
-                0   0   0   0   0   0   N/10 %8
-                0   0   0   0   0   0   N/10 %9
-                0   0   0   0   0   0   N/10 %10
-                ];
-        elseif (sum(i==[3 4 6 7 8 9 10 11]))
+        
+        elseif (sum(i==[2 3 4 5 8]))
             cor(i,:)=colors(2,:);
             s=      [
-                0   0   0   0   0   0   N/10 %10
-                0   0   0   a   0   0   N/10 %1
-                a   0   0   a   0   0   N/10 %2
-                a   0   0   0   0   0   N/10 %3
-                0   0   0   0   0   0   N/10 %4
-                0   0   0   a   0   0   N/10 %5
-                a   0   0   a   0   0   N/10 %6
-                a   0   0   0   0   0   N/10 %7
-                0   0   0   0   0   0   N/10 %8
-                0   0   0   0   0   0   N/10 %9
-                
+                0   0   0   a   0   0   N/6 %1
+                a   0   0   a   0   0   N/6 %2
+                a   0   0   0   0   0   N/6 %3
+                0   0   0   0   0   0   N/6 %4
+                0   0   0   0   0   0   N/6 %5
+                0   0   0   0   0   0   N/6 %6
                 ];
-        elseif (sum(i==[15 16 17 23]))
+        elseif (sum(i==[ 6 7 9 10 11 12 13 14]))
             cor(i,:)=colors(3,:);
-            s=  [
-                0   0   0   0   0   0   N/10 %9
-                0   0   0   0   0   0   N/10 %10
-                0   0   0   a   0   0   N/10 %1
-                a   0   0   a   0   0   N/10 %2
-                a   0   0   0   0   0   N/10 %3
-                0   0   0   0   0   0   N/10 %4
-                0   0   0   a   0   0   N/10 %5
-                a   0   0   a   0   0   N/10 %6
-                a   0   0   0   0   0   N/10 %7
-                0   0   0   0   0   0   N/10 %8
+            s=      [
+                0   0   0   0   0   0   N/6 %1
+                0   0   0   a   0   0   N/6 %2
+                a   0   0   a   0   0   N/6 %3
+                a   0   0   0   0   0   N/6 %4
+                0   0   0   0   0   0   N/6 %5
+                0   0   0   0   0   0   N/6 %6
                 ];
         else
             cor(i,:)=colors(4,:);
             s=  [
-                0   0   0   0   0   0   N/10 %9
-                0   0   0   0   0   0   N/10 %10
-                0   0   0   0   0   0   N/10 %1
-                0   0   0   a   0   0   N/10 %2
-                a   0   0   a   0   0   N/10 %3
-                a   0   0   0   0   0   N/10 %4
-                0   0   0   0   0   0   N/10 %5
-                0   0   0   a   0   0   N/10 %6
-                a   0   0   a   0   0   N/10 %7
-                a   0   0   0   0   0   N/10 %8
+                0   0   0   0   0   0   N/6 %9
+                0   0   0   0   0   0   N/6 %10
+                0   0   0   0   0   0   N/6 %1
+                0   0   0   0   0   0   N/6 %2
+                0   0   0   0   0   0   N/6 %3
+                0   0   0   0   0   0   N/6 %4
                 ];
         end
         h_app(:,:,i)=compute_Happ(N,s); % aplicado
@@ -353,7 +299,7 @@ for jj=1:1
         % m(i+1,:,:)=rk4(squeeze(m(i,:,:)),squeeze(h_eff(i,:,:)),squeeze(hT(i,:,:)),squeeze(i_s(i,:,:)),dt);
         % RK_SDE
          m(i+1,:,:)=rk_sde_w2(squeeze(m(i,:,:)),squeeze(h_eff(i,:,:)),squeeze(i_s(i,:,:)), v, dt,squeeze(dW(i,:,:)));
-        m(i+1,:,:)=m(i+1,:,:)./sqrt(sum(m(i+1,:,:).^2));
+        %m(i+1,:,:)=m(i+1,:,:)./sqrt(sum(m(i+1,:,:).^2));
     end
     toc;
     dispstat('Finished.','keepprev');
@@ -366,7 +312,7 @@ for jj=1:1
     rows=nn; %ceil(part_n/cols); % numero de linhas
     eps=0;
     plot_M_and_H(m,h_app,t,part_n,a,jj,cols,rows,cor,grid,name,eps);
-    %plot_Particles(px,py,d_or,dx,dy,cor,jj,rows,cols,angles,name,eps);
+    plot_Particles(px,py,d_or,dx,dy,cor,jj,rows,cols,angles,name,eps);
     if m(end,2,1)>0
         count_up=count_up+1;
         result_rk_up=result_rk_up+squeeze(m(:,:,1));
