@@ -67,7 +67,7 @@
 using namespace std;
 
 // Global variables
-const int NMC(5e6);
+int NMC;
 double w, t;             // w: particle's width, t: particle's thickness
 double abu[2], abd[2];   //global vectors: yu(x)= abu[0]x +abu[1] and yd(x)= abd[0]x +abd[1]
 // Function prototypes
@@ -85,8 +85,8 @@ int main()
     double alfa2, beta2, alfa5, beta5, d[18];
 
     // Inicia seed de acordo com o clock: gera # pseudoaleatorios cada vez que o programa rodar
-//    srand((int)time(NULL));
-    srand(1);
+    srand((int)time(NULL));
+    //srand(1);
 
     //Define file streams for input and output
 //    ifstream fin("IN.dat");
@@ -108,6 +108,7 @@ int main()
     //for(int i=0; i<4; ++i) fin >> px[i] >> py[i];
 	for(int i=0; i<4; ++i) std::cin >> px[i] >> py[i];
     std::cin >> t;
+ std::cin >> NMC;
     //fin.close();
 
 //  definition of functions yu(x) and yd(x) coefficients: yu =au*x+bu=ab[0]x+ab[1] and yd =ad*x+bd=ab[2]x+ab[3]

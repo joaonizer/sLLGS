@@ -1,4 +1,4 @@
-function [Nd, V]=write_FileDemag3D_rec(px, py, th, platform)
+function [Nd, V]=write_FileDemag3D_rec_NMC(px, py, th, platform,NMC)
 % Calcula o tensor Nd de anisotropia de forma
 % Retorna o tensor Nd ja normalizado e V em m3
 % px - coordendas x dos pontos nm
@@ -26,12 +26,12 @@ end
 data_p=[
     num2str(px(2)-px(1)) ' '...
     num2str(py(2)-py(3)) ' '...
-    num2str(th)...
+    num2str(th) ' ' num2str(NMC)...
     ];
 if strcmp(platform,'lin')
-    [flag,Nstr]=system(['echo '' ' data_p ' '' | ./Cpp/demag_rec']); % roda o executavel para gerar o OUT_demag3D2
+    [flag,Nstr]=system(['echo '' ' data_p ' '' | ./Cpp/demag_rec_NMC']); % roda o executavel para gerar o OUT_demag3D2
 else
-    [flag,Nstr]=system(['echo ' data_p ' | .\Cpp\demag_rec.exe']); % no single quotes for windows
+    [flag,Nstr]=system(['echo ' data_p ' | .\Cpp\demag_rec_NMC.exe']); % no single quotes for windows
 end
 %% Leitura e Normaliza��o do Tensor
 % Calculo do Volume

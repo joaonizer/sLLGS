@@ -1,4 +1,4 @@
-function [Nd, V]=write_FileDemag3D_noDAT(px, py, th, platform)
+function [Nd, V]=write_FileDemag3D_noDAT_NMC(px, py, th, platform,NMC)
 % Calcula o tensor Ns de anisotropia de forma
 % Retorna o tensor Ns ja normalizado e V em m3
 % px - coordendas x dos pontos nm
@@ -27,15 +27,15 @@ data_p=[
     num2str(px(2)) ' ' num2str(py(2)) ' '...
     num2str(px(3)) ' ' num2str(py(3)) ' '...
     num2str(px(4)) ' ' num2str(py(4)) ' '...
-    num2str(th)...
+    num2str(th) ' ' num2str(NMC)...
     ];
 
 if strcmp(platform,'lin')
     %[flag,Nstr]=system(['echo '' ' data_p ' '' | ./Fortran/demag3D3_noDAT']); % roda o executavel para gerar o OUT_demag3D2
-    [flag,Nstr]=system(['echo '' ' data_p ' '' | ./Cpp/demag_cut']); % roda o executavel para gerar o OUT_demag3D2
+    [flag,Nstr]=system(['echo '' ' data_p ' '' | ./Cpp/demag_cut_NMC']); % roda o executavel para gerar o OUT_demag3D2
 else
     %[flag,Nstr]=system(['echo ' data_p ' | .\Fortran\demag3D3_noDAT.exe']); % no single quotes for windows
-    [flag,Nstr]=system(['echo ' data_p ' | .\Cpp\demag_cut.exe']); % no single quotes for windows
+    [flag,Nstr]=system(['echo ' data_p ' | .\Cpp\demag_cut_NMC.exe']); % no single quotes for windows
 end
 %% Leitura e Normaliza��o do Tensor
 % Calculo do Volume

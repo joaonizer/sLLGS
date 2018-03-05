@@ -40,5 +40,6 @@ data=[
     data(:,15), data(:,16), data(:,17)... % B (Zeeman Field)
     data(:,12), data(:, 1)... % Demag e Total Energy
     data(:, 13)... % Zeeman Energy
+    data(:, 10)... % Stage Max Spin Angle
     ];
 end
