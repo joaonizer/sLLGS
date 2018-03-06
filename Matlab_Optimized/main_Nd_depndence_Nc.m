@@ -148,7 +148,7 @@ for j=1:9
         %pd(j,i,:) = fitdist(squeeze(Nd(i,:,j,j))','Normal');
         %x_values=pd(j,i,:).mu-4*pd(j,i,:).sigma:0.0001:pd(j,i,:).mu+4*pd(j,i,:).sigma;
         %y=pdf(pd(j,i,:),x_values);
-        if ~sum(j==[3 6 9])
+        if ~j==1
             h=histfit(squeeze(Nd(i,abs(Nd(i,:,j,j))<.5,j,j)));
         else
             h=histfit(squeeze(Nd(i,abs(Nd(i,:,j,j))<1,j,j)));
@@ -183,9 +183,9 @@ for j=1:9
     lh=legend('0.5M ', '1M', '5M', '10M');
     set(lh,'Location','Best')
     title([particle ' Nd' index])
-    sdf('P1')
+    %sdf('P1')
     set(lh,'FontSize',12)
-    set(gca,'LooseInset',get(gca,'TightInset')+0.01);
+    %set(gca,'LooseInset',get(gca,'TightInset')+0.01);
 end
 %
 

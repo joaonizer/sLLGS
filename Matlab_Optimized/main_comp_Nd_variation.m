@@ -136,6 +136,9 @@ if compute_NCND
 else
     warning('Tensores nao foram recalculados!');
 end
+Nd(1,1)=0.172110-1*0.004901;
+Nd(2,2)=0.083506-1*0.002686;
+Nd(3,3)=0.744113-1*0.020548;
 Nc=Nc*0;
 %Nc=0.5*Nc;
 % Nc(:,:,15,[9,11])=zeros(3,3,1,2);
