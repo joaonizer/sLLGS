@@ -22,7 +22,7 @@ else
 end
 
 N = 10000;       % numero de passos
-tempo_total=10e-9;% Tempo total de simulaÃ§Ã£o
+tempo_total=25e-9;% Tempo total de simulaÃ§Ã£o
 alpha=0.05;%;0.054;
 n = [0 1 0]/sqrt(1);
 T=300;        % Kelvin
@@ -94,10 +94,10 @@ for i=1:mm
             cortes_y(count,:)=[0 0 0 0];
             count=count+1;
         elseif grid(j,i)==2 %and
-            cortes_y(count,:)=[0 0 0 -10];
+            cortes_y(count,:)=[0 0 0 -20];
             count=count+1;
         elseif grid(j,i)==3 %or
-            cortes_y(count,:)=[30 0 0 0];
+            cortes_y(count,:)=[20 0 0 0];
             count=count+1;
         end
     end
@@ -107,7 +107,7 @@ for i=1:length(w)
     [px(i,:),py(i,:)]=write_Pontos(w,l,cortes_y(i,:),i);
 end
 dx=(w(1)+10)*[0:50];
-dy=(l(1)+25)*[0:50]; %% deslocamentos em y
+dy=(l(1)+20)*[0:50]; %% deslocamentos em y
 offset=0;
 count=1;
 for i=1:mm
@@ -131,7 +131,7 @@ if compute_NCND
     %Nc_old=Nc;
     %Nd_old=Nd;
     %test_List
-    radius=1;
+    radius=2;
     Nc=compute_Nc(px,py,th,d_or,radius,grid,part_n,compute_PAR,platform);
 else
     warning('Tensores nao foram recalculados!');
@@ -254,7 +254,7 @@ bulk_sha = 0.4; % bul spin hall angle
 th_shm = 5; % [nm] thickness of the spin hall material SHM
 l_shm = 3.5; % [nm] SHM spin diffusion length
 theta_she=bulk_sha*(1-sech(th_shm/l_shm)); % Spin Hall Angle ()
-J_shm=6*140e9; % Spin Hall current density (A/m2)
+J_shm=5*6*140e9; % Spin Hall current density (A/m2)
 
 zeta=hbar*theta_she*J_shm/2/q./th/1e-9/Ms;
 %Ns = 2*Ms*V/gammamu0/hbar;
