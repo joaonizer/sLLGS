@@ -2,6 +2,37 @@ function [m_new] = rk_sde(m, h_eff, i_s, v, dt, dW)
 global alpha alpha_l;
 
 % Drift Term
+% m_is = cross(m,i_s);
+% 
+% mm_is = cross(m,m_is);
+% 
+% m_heff = cross(m,h_eff);
+% 
+% mm_heff = cross(m,m_heff);
+% 
+% a=-alpha_l*(m_heff+alpha*(mm_heff)-mm_is)-alpha_l*v.^2.*m; %a
+% 
+% % Difusion Term
+% m_v = cross(m,v);
+% 
+% mm_v = cross(m,m_v);
+% 
+% b = -alpha_l*m_v-alpha_l*alpha*mm_v; %b
+% 
+% % Upsilon term
+% Y = m + a*dt + b*sqrt(dt);
+% 
+% % b(Y)
+% Y_v = cross(Y,v);
+% 
+% YY_v = cross(Y,Y_v);
+% 
+% bY = -alpha_l*Y_v-alpha_l*alpha*YY_v; %bY
+% 
+% % Update on 'm'
+% m_new = (m + a*dt + b.*dW ...
+%         + 0.5*(bY-b).*(dW.^2-dt)/sqrt(dt));
+%% 
 m_is = cross(m,i_s);
 
 mm_is = cross(m,m_is);
@@ -10,28 +41,16 @@ m_heff = cross(m,h_eff);
 
 mm_heff = cross(m,m_heff);
 
-a=-alpha_l*(m_heff+mm_is+alpha*(mm_heff-m_is))-alpha_l*v.^2.*m; %a
+a=-alpha_l*(m_heff+alpha*(mm_heff)-mm_is)+alpha_l*v.^2.*m; %a
 
 % Difusion Term
 m_v = cross(m,v);
 
 mm_v = cross(m,m_v);
 
-b = -alpha_l*m_v-alpha_l*alpha*mm_v; %b
+b = -alpha_l*m_v-alpha_l*alpha*mm_v;
 
-% Upsilon term
-Y = m + a*dt + b*sqrt(dt);
-
-% b(Y)
-Y_v = cross(Y,v);
-
-YY_v = cross(Y,Y_v);
-
-bY = -alpha_l*Y_v-alpha_l*alpha*YY_v; %bY
-
-% Update on 'm'
-m_new = m + a*dt + b.*dW ...
-        + 0.5*(bY-b).*(dW.^2-dt)/sqrt(dt);
+m_new = m + a*dt + b.*dW;
 
 %% RK4-Heun
 % % d1

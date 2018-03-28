@@ -1,4 +1,4 @@
-function plot_Energias(m, hT, h_app, hc, V,t,data,cell_size,im_id,Wi,Li)
+function plot_Energias(m, hT, h_app, hc, Nd,V,t,Wi,Li)
 % Calcula e plota as energias:
 %   -Térmica
 %   -Dissipada
@@ -22,10 +22,10 @@ E0=-mu0*V*Ms^2*m(:,1).*h_app(:,1)/q;
 % Hdy(t) = -Ms(Nyx*mx(t) + Nyy*my(t) + Nyz*mz(t))
 % Hdz(t) = -Ms(Nzx*mx(t) + Nzy*my(t) + Nzz*mz(t)),
 % onde Nxx, Nxy etc. são as componentes do teNcor desmagnetização
-hd(:,1)=Nc(1,1)*m(:,1)+Nc(1,2)*m(:,2)+Nc(1,3)*m(:,3);
-hd(:,2)=Nc(2,1)*m(:,1)+Nc(2,2)*m(:,2)+Nc(2,3)*m(:,3);
-hd(:,3)=Nc(3,1)*m(:,1)+Nc(3,2)*m(:,2)+Nc(3,3)*m(:,3);
-Ed=mu0*V*Ms^2*hd.*m/q/2;
+hd(:,1)=Nd(1,1)*m(:,1)+Nd(1,2)*m(:,2)+Nd(1,3)*m(:,3);
+hd(:,2)=Nd(2,1)*m(:,1)+Nd(2,2)*m(:,2)+Nd(2,3)*m(:,3);
+hd(:,3)=Nd(3,1)*m(:,1)+Nd(3,2)*m(:,2)+Nd(3,3)*m(:,3);
+Ed=-mu0*V*Ms^2*hd.*m/q/2;
 Ed=sum(Ed,2);
 %% Energia de Acoplamento
 % Ec(t)  = -mu0*V*Ms*(mx(t)*Hcx + my(t)*Hcy + mz(t)*Hcz)*6.242e+18
@@ -36,19 +36,18 @@ Ec= sum(Ec,2);
 %% Plots
 
 % Plot the Results
-figure('Visible','off',...
+figure('Visible','on',...
     'PaperPosition',[0 0 11.692 8.267]*2,...
     'PaperSize',[11.692 8.267]*2)
 subplot(3,2,1);
-plot(data(:,1)*time_step/1e-9,data(:,2:4),'LineWidth',2);
-hold on
+%plot(data(:,1)*time_step/1e-9,data(:,2:4),'LineWidth',2);
 ax = gca;
 ax.ColorOrderIndex = 1;
 plot(t,m(:,:),'--','LineWidth',2);
+hold on
 grid on;
 title({['\alpha=' num2str(alpha) '|\gamma=' num2str(gammamu0)...
-    '|dt=' num2str(time_step) 's'];['K1 = ' num2str(K1) '|' num2str(T) 'K'...
-    '|CS=' num2str(cell_size(1)/1e-9) 'x' num2str(cell_size(2)/1e-9) 'x' num2str(cell_size(3)/1e-9) 'nm3']})
+    '|dt=' num2str(time_step) 's'];['K1 = ' num2str(K1) '|' num2str(T) 'K']})
 %ylim([-1.8 1.2]);
 ylabel('m');
 xlabel('Tempo (Nc)')
@@ -71,7 +70,7 @@ set(lh,'Orientation','horizontal','Location','south','FontSize',12);
 % Plota a Particula com iNcet
 axes('Position',[.05 .8 .05 .05])
 box on
-imshow(['./OOMMF_sim/' im_id '.gif'])
+%imshow(['./OOMMF_sim/' im_id '.gif'])
 xlabel(['W = ' num2str(Wi) 'nm']);
 ylabel(['L = ' num2str(Li) 'nm']);
 set(gca,'FontSize',10);
@@ -111,21 +110,21 @@ set(gca,'FontSize',24);
 subplot(3,2,3);
 %plot(data(:,1)*time_step/1e-9,data(:,8)/q,'LineWidth',2);
 %hold on
-plot(t,data(:,8)/q,'LineWidth',2);
+%plot(t,data(:,8)/q,'LineWidth',2);
 hold on
 %plot(data(:,1)*time_step/1e-9,Ed_oommf,'LineWidth',2);
 plot(t,Ed,'LineWidth',2);
 title('Energia Desmagnetização')
 ylabel('eV');
 xlabel('Tempo (Nc)')
-ylim([-5 max(max(Ed),max(data(:,8)/q))+5]);
+%ylim([-5 max(max(Ed),max(data(:,8)/q))+5]);
 set(gca,'FontSize',24);
 %lh=legend('OOMMF','OOMMF w Eq','RK');
 lh=legend('OOMMF','RK');
 set(lh,'Location','South','Orientation','horizontal','FontSize',12);
 %% Zeeman Energy
 subplot(3,2,4);
-plot(t,data(:,10)/q,'LineWidth',2);
+%plot(t,data(:,10)/q,'LineWidth',2);
 hold on
 plot(t,E0,'--','LineWidth',2);
 title('Energia Zeeman')
@@ -137,17 +136,17 @@ set(lh,'FontSize',12);
 %% Desmagnetização Theta
 subplot(3,2,5);
 theta_RK=cart2sph(m(:,1),m(:,2),m(:,3))*180/pi;
-theta_OOMMF=cart2sph(m_oommf(:,1),m_oommf(:,2),m_oommf(:,3))*180/pi;
+%theta_OOMMF=cart2sph(m_oommf(:,1),m_oommf(:,2),m_oommf(:,3))*180/pi;
 theta_RK(theta_RK<0)=theta_RK(theta_RK<0)+360;
-theta_OOMMF(theta_OOMMF<0)=theta_OOMMF(theta_OOMMF<0)+360;
-plot(theta_OOMMF,data(:,8)/q,'*','LineWidth',2);
+%theta_OOMMF(theta_OOMMF<0)=theta_OOMMF(theta_OOMMF<0)+360;
+%plot(theta_OOMMF,data(:,8)/q,'*','LineWidth',2);
 hold on
 %plot(theta_OOMMF,Ed_oommf,'*','LineWidth',2);
 plot(theta_RK,Ed,'*','LineWidth',2);
 title('Energia Desmagnetização')
 ylabel('eV');
 xlabel('\theta (Graus)')
-ylim([-5 max(max(Ed),max(data(:,8)/q))+5]);
+%ylim([-5 max(max(Ed),max(data(:,8)/q))+5]);
 set(gca,'FontSize',24);
 %lh=legend('OOMMF','OOMMF--RK','RK');
 lh=legend('OOMMF','RK');
@@ -160,6 +159,6 @@ ylabel('eV');
 xlabel('Tempo (Nc)')
 set(gca,'FontSize',24);
 %% Salva o PDF
-print(gcf,'-dpdf','-r300',['./img/HxM_' im_id '.pdf'])
+%print(gcf,'-dpdf','-r300',['./img/HxM_' im_id '.pdf'])
 fprintf('\tOK!\n');
 end

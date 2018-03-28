@@ -1,7 +1,7 @@
 function []=plot_Particles(px,py,d_or,dx,dy,cor,jj,rows,cols,angles,name,eps)
 %figure(%'Position',[0 0 100*cols 100*rows*2], ...
 %    'Name','Alocação das Partículas');
-h=figure('Visible','off');
+h=figure(2);
 %W = cols/2; H = rows*2;
 W = 10; H = 10;
 set(h,'PaperUnits','inches')
@@ -31,14 +31,12 @@ for i=1:part_n
 end
 set(gca,'fontsize',text_font_size,'linewidth',axis_linewidth);
 
-
-ylim([-30+min(d_or(:,2)) 30+max(d_or(:,2))+2*max(max(py(:,1:2)))])
-xlim([-30+min(d_or(:,1)) 30+max(d_or(:,1))+2*max(max(px(:,2:3)))])
+daspect([1 1 1])
+title(['XOR Architecture'],'Interpreter','tex')
+ylim([-30+min(d_or(:,2)) 30+max(d_or(:,2))])
+xlim([-30+min(d_or(:,1)) 30+max(d_or(:,1))+max(px())])
 xlabel('nm','Interpreter','latex')
 ylabel('nm','Interpreter','latex')
-daspect([1 1 1])
-
-title(['XOR Architecture'],'Interpreter','tex')
 %sdf('P1');
 %print('-dpdfwrite',['XOR_Architecture.pdf'])
 if ~eps

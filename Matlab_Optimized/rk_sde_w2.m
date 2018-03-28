@@ -10,16 +10,16 @@ m_heff = cross(m,h_eff);
 
 mm_heff = cross(m,m_heff);
 
-a=-alpha_l*(m_heff+mm_is+alpha*(mm_heff)+mm_is);%-alpha_l*v.^2.*m; %a
+a=-alpha_l*(m_heff+alpha*(mm_heff)-mm_is)-alpha_l*v.^2.*m; %a
 
 % Difusion Term
 m_v = cross(m,v);
 
 mm_v = cross(m,m_v);
 
-b = -alpha_l*m_v-alpha_l*alpha*mm_v; %b
+b = -alpha_l*(m_v+alpha*mm_v); %b
 
-% Auciliary Terms
+% Auxiliar Terms
 u      = m + a*dt + b.*dW;
 u_plus = m + a*dt + b*sqrt(dt);
 u_minus= m + a*dt - b*sqrt(dt);
@@ -33,7 +33,7 @@ m_heff = cross(u,h_eff);
 
 mm_heff = cross(u,m_heff);
 
-a_u=-alpha_l*(m_heff+mm_is+alpha*(mm_heff)+mm_is);%-alpha_l*v.^2.*m; %a
+a_u=-alpha_l*(m_heff+alpha*(mm_heff)-mm_is)-alpha_l*v.^2.*m; %a
 
 m_1 = m + .5*(a_u+a)*dt;
 

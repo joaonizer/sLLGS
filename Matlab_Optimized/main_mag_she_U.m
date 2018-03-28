@@ -7,12 +7,12 @@ close all
 global alpha alpha_l Ms K1 HkMs sig kbT q time_step gammamu0 A n mu0;
 %% Constantes
 %Ku=0.26*1; %eV
-q = 1.60217662e-19; % carga do eletron C
-mu0=4*pi*1e-7;      % H/m ou T.m/A
-kb=1.38064852e-23;  % m2.kg.s-2.K-1
+q = -1.60217662e-19; % carga do eletron C
+mu0=4*pi*1e-7;      % N/A2 ->   m.kg.s-2
+kb=1.38064852e-23;  % J/K  ->   m2.kg.s-2.K-1
 A=13e-12;           % Exchange Stiffness J/m
-t2am=7.943e5;       % converte T para A/m
-gammamu0=2.211e5;   % (sA/m)-1
+t2am=1/mu0;       % converte T para A/m
+gammamu0=1.760859644e11*mu0;   %m/(sA)
 hbar=2.05457e-34; % J.s/rad  -> h/2pi
 %% Configuracoes do Algoritmo
 if strcmp(computer,'GLNXA64')
@@ -21,11 +21,11 @@ else
     platform = 'win';
 end
 
-N = 10000;       % numero de passos
-tempo_total=25e-9;% Tempo total de simulaÃ§Ã£o
+N = 60000;       % numero de passos
+tempo_total=60e-9;% Tempo total de simulaÃ§Ã£o
 alpha=0.05;%;0.054;
 n = [0 1 0]/sqrt(1);
-T=300;        % Kelvin
+T=0;        % Kelvin
 Ms=800e3;   % A/m
 kbT=kb*T;   % J
 ti = 0;     % instante inicial da variavel independente
@@ -38,15 +38,16 @@ result_rk_up=zeros(N+1,3);
 result_rk_down=result_rk_up;
 count_up=0;
 %% Configuracoes do Sistema
-name=['test_she-' num2str(T) 'K-' num2str(N) 'steps-' num2str(tempo_total*1e9) 'ns-' num2str(alpha*100) 'alpha-force-module'];
+name=['./Results/2Particles/particles_she-' num2str(T) 'K-' num2str(N) 'steps-' num2str(tempo_total*1e9) 'ns-' num2str(alpha*100) 'alpha-force-module'];
 grid=[
-%     1 0
-%     0   1
-              0   0   1   1 1
-              0   0   1   0 0
-              1   1   1   0 0
-              0   0   1   0 0
-              0   0   1   1 1
+    4 0 4
+    4 0 4
+    4 4 4
+    %               0   0   1   1 1
+    %               0   0   1   0 0
+    %               1   1   1   0 0
+    %               0   0   1   0 0
+    %               0   0   1   1 1
     
     %     1   1   1 0  0   0   0
     %     0   0   2 1  1   0   0
@@ -67,12 +68,15 @@ alpha_l=1/(1+alpha^2);
 mi = [0 1 0]/sqrt(1); % valor inicial das variaveis dependente
 m=zeros(N+1,3,part_n);
 h_eff=zeros(N,3,part_n);
-m(1,1,1)=sqrt(1-2*0.1^2);
-m(1,2,1)=0.1;
-m(1,3,1)=0.1;
+m(1,1,1)=1;
+m(1,2,1)=0;
+m(1,3,1)=0;
 for i=2:part_n % inicializa as partÃ­culas de forma antiferromagnetica
     m(:,:,i)=(-1)^(i-1)*m(:,:,1);
 end
+m(1,1,1)=0;
+m(1,2,1)=-1;
+m(1,3,1)=0;
 %% Dimensoes da Particula
 
 w=ones(1,part_n)*50;  % width of particles
@@ -90,14 +94,32 @@ mm=size(grid,2);
 count=1;
 for i=1:mm
     for j=1:nn
-        if grid(j,i)==1 % normal retangular
+        if grid(j,i)==7 %
+            cortes_y(count,:)=[10 0 0 -10];
+            count=count+1;
+        elseif grid(j,i)==6 %
+            cortes_y(count,:)=[0 10 -10 0];
+            count=count+1;
+        elseif grid(j,i)==5 %r
+            cortes_y(count,:)=[10 0 0 -10];
+            count=count+1;
+        elseif grid(j,i)==4 %
             cortes_y(count,:)=[0 0 0 0];
             count=count+1;
-        elseif grid(j,i)==2 %and
-            cortes_y(count,:)=[0 0 0 -20];
+        elseif grid(j,i)==3 %
+            cortes_y(count,:)=[0 10 -10 0];
             count=count+1;
-        elseif grid(j,i)==3 %or
-            cortes_y(count,:)=[20 0 0 0];
+        elseif grid(j,i)==2 %r
+            cortes_y(count,:)=[10 0 0 -10];
+            count=count+1;
+        elseif grid(j,i)==1 %
+            cortes_y(count,:)=[0 10 -10 0];
+            count=count+1;
+        elseif grid(j,i)==200 %and
+            cortes_y(count,:)=[0 0 0 -10];
+            count=count+1;
+        elseif grid(j,i)==300 %or
+            cortes_y(count,:)=[30 0 0 0];
             count=count+1;
         end
     end
@@ -118,6 +140,9 @@ for i=1:mm
         end
     end
 end
+
+d_or([1 2],1)=d_or([1 2],1)-0;
+d_or([5 6],1)=d_or([5 6],1)+25;
 
 %% Compute Tensores
 compute_NCND=1; % If TRUE computes the tensors again
@@ -149,7 +174,7 @@ end
 % Nc(:,:,18,15)=zeros(3,3,1,1);
 %% Campo Aplicado
 cor=zeros(part_n,3);
-for jj=2:2
+for jj=14:14
     h_app=zeros(N+1,3,part_n);
     a=1*150e-3; % T
     
@@ -162,7 +187,7 @@ for jj=2:2
         ];
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    ex=experiment(jj,:); % testa a primeira combinaÃ§Ã£o de 8 possibilidades
+    %ex=experiment(jj,:); % testa a primeira combinaÃ§Ã£o de 8 possibilidades
     %%%%%% ^ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     colors = [
         0.4940    0.1840    0.5560  % Roxo
@@ -171,100 +196,67 @@ for jj=2:2
         0.4660    0.6740    0.1880  % Verde
         ];
     for i=1:part_n
-        phases=5;
-        if (i==100) % X in
+        phases=6;
+        if (i==1) % X in
             cor(i,:)=colors(1,:);
             s=      [
-                0   ex(1)*a   0   a   ex(1)*a   0   N/phases %2
-                a   ex(1)*a   0   a   ex(1)*a   0   N/phases %2
-                a   ex(1)*a   0   0   ex(1)*a   0   N/phases %2
-                0   ex(1)*a   0   0   ex(1)*a   0   N/phases %2
+                0   0   0   0   0   0   N/phases %2
+                0   0   0   0   0   0   N/phases %2
+                0   0   0   0   0   0   N/phases %2
+                0   0   0   0   0   0   N/phases %2
+                0   0   0   0   0   0   N/phases %6
                 0   0   0   0   0   0   N/phases %6
                 ];
-        elseif (i==1) % Ybar in
-            cor(i,:)=colors(1,:);
-            s=      [
-                0   -ex(2)*a   0   a   -ex(2)*a   0   N/phases %2
-                a   -ex(2)*a   0   a   -ex(2)*a   0   N/phases %2
-                a   -ex(2)*a   0   0   -ex(2)*a   0   N/phases %2
-                0   -ex(2)*a   0   0   -ex(2)*a   0   N/phases %2
-                0   0   0   0   0   0   N/phases %6
-                ];
-        elseif (i==300) %Xbar in
-            cor(i,:)=colors(1,:);
-            s=      [
-                0   -ex(1)*a   0   a   -ex(1)*a   0   N/phases %2
-                a   -ex(1)*a   0   a   -ex(1)*a   0   N/phases %2
-                a   -ex(1)*a   0   0   -ex(1)*a   0   N/phases %2
-                0   -ex(1)*a   0   0   -ex(1)*a   0   N/phases %2
-                0   0   0   0   0   0   N/phases %6
-                ];
-        elseif i==400 %Y in
-            cor(i,:)=colors(1,:);
-            s=      [
-                0   ex(2)*a   0   a   ex(2)*a   0   N/phases %1
-                a   ex(2)*a   0   a   ex(2)*a   0   N/phases %2
-                a   ex(2)*a   0   0   ex(2)*a   0   N/phases %3
-                0   ex(2)*a   0   0   ex(2)*a   0   N/phases %4
-                0   0   0   0   0   0   N/phases %5
-                ];
-        elseif (sum(i==[2 5]))
-            cor(i,:)=colors(1,:);
+        elseif (sum(i==[2 3]))
+            cor(i,:)=colors(2,:);
             s=      [
                 0   0   0   a   0   0   N/phases %1
                 a   0   0   a   0   0   N/phases %2
                 a   0   0   0   0   0   N/phases %3
                 0   0   0   0   0   0   N/phases %4
                 0   0   0   0   0   0   N/phases %5
+                0   0   0   0   0   0   N/phases %6
                 ];
-        elseif (sum(i==[3 4 6 7 8 9 10 11]))
-            cor(i,:)=colors(2,:);
+        elseif (sum(i==[ 4  7]))
+            cor(i,:)=colors(3,:);
             s=      [
                 0   0   0   0   0   0   N/phases %1
                 0   0   0   a   0   0   N/phases %2
                 a   0   0   a   0   0   N/phases %3
                 a   0   0   0   0   0   N/phases %4
                 0   0   0   0   0   0   N/phases %5
-                
-                ];
-        elseif (sum(i==[15 16 17 23]))
-            cor(i,:)=colors(3,:);
-            s=  [
-                0   0   0   0   0   0   N/phases %1
-                0   0   0   0   0   0   N/phases %2
-                0   0   0   a   0   0   N/phases %3
-                a   0   0   a   0   0   N/phases %4
-                a   0   0   0   0   0   N/phases %5
+                0   0   0   0   0   0   N/phases %6
                 ];
         else
             cor(i,:)=colors(4,:);
             s=  [
                 0   0   0   0   0   0   N/phases %1
                 0   0   0   0   0   0   N/phases %2
-                0   0   0   0   0   0   N/phases %3
-                0   0   0   a   0   0   N/phases %4
-                a   0   0   a   0   0   N/phases %5
+                0   0   0   a   0   0   N/phases %3
+                a   0   0   a   0   0   N/phases %4
+                a   0   0   0   0   0   N/phases %5
+                0   0   0   0   0   0   N/phases %6
                 ];
         end
         h_app(:,:,i)=compute_Happ(N,s); % aplicado
     end
-%% Corrente de Spin
-% Define a curva da corrente de spin aplicada
-bulk_sha = 0.4; % bul spin hall angle
-th_shm = 5; % [nm] thickness of the spin hall material SHM
-l_shm = 3.5; % [nm] SHM spin diffusion length
-theta_she=bulk_sha*(1-sech(th_shm/l_shm)); % Spin Hall Angle ()
-J_shm=5*6*140e9; % Spin Hall current density (A/m2)
-
-zeta=hbar*theta_she*J_shm/2/q./th/1e-9/Ms;
-%Ns = 2*Ms*V/gammamu0/hbar;
-%is=I_s./(q*gammamu0*mu0*Ms*Ns); % magnitude normalizada da corrente de spin
-i_s=ones(N+1,3,part_n);
-i_s=h_app/a;
-h_app=zeros(N+1,3,part_n);
-for i=1:part_n
-    i_s(:,:,i)=squeeze(i_s(:,:,i)).*zeta(i);
-end
+    %% Corrente de Spin
+    % Define a curva da corrente de spin aplicada
+    bulk_sha = 0.4; % bul spin hall angle
+    th_shm = 5; % [nm] thickness of the spin hall material SHM
+    l_shm = 3.5; % [nm] SHM spin diffusion length
+    theta_she=bulk_sha*(1-sech(th_shm/l_shm)); % Spin Hall Angle ()
+    J_shm=5*1.8e12; % Spin Hall current density (A/m2)
+    
+    zeta=hbar*theta_she*J_shm/2/q./th/1e-9/Ms;
+    %Ns = 2*Ms*V/gammamu0/hbar;
+    %is=I_s./(q*gammamu0*mu0*Ms*Ns); % magnitude normalizada da corrente de spin
+    i_s=ones(N+1,3,part_n);
+    i_s=h_app/a;
+    h_app=zeros(N+1,3,part_n);
+    for i=1:part_n
+        i_s(:,:,i)=squeeze(i_s(:,:,i)).*zeta(i);
+    end
     %% Campo TÃ©rmico
     K1=0;
     HkMs=2*K1/Ms/mu0/Ms;
@@ -272,7 +264,8 @@ end
     %sig=sqrt(2*alpha*kbT/mu0/V(1)/dt)/Ms;
     
     %sig=sqrt(2*alpha*kb*T/gammamu0/mu0/Ms/V(1)/time_step)/Ms; % old version
-    sig=sqrt(2*alpha*kb*T/mu0/Ms/Ms/V(1))*sqrt(dt); % new
+    %sig=sqrt(2*alpha*kb*T/mu0/Ms/Ms/V(1))*sqrt(dt); % new
+    sig=sqrt(2*alpha*kb*T/gammamu0/Ms/mu0/V(1)/time_step)/Ms*sqrt(dt);
     %version
     dW=zeros(N+1,3,part_n);
     hT=dW;
@@ -294,7 +287,7 @@ end
     fprintf('total_time:\t\t%3.3e s\n',tempo_total);
     fprintf('N: \t\t\t%d\n',N);
     fprintf('T: \t\t\t%d Kelvin\n',T);
-    fprintf('alpha: \t\t\t%f\n',alpha);
+    fprintf('alpha: \t\t\t%.3f\n',alpha);
     fprintf('Particles: \t\t%d\n',part_n);
     fprintf('Experiment No: \t%d\n',jj);
     fprintf('------------------------------------\n');
@@ -320,8 +313,8 @@ end
         % Range-Kuta-4
         % m(i+1,:,:)=rk4(squeeze(m(i,:,:)),squeeze(h_eff(i,:,:)),squeeze(hT(i,:,:)),squeeze(i_s(i,:,:)),dt);
         % RK_SDE
-         m(i+1,:,:)=rk_sde_w2(squeeze(m(i,:,:)),squeeze(h_eff(i,:,:)),squeeze(i_s(i,:,:)), v, dt,squeeze(dW(i,:,:)));
-        %m(i+1,:,:)=m(i+1,:,:)./sqrt(sum(m(i+1,:,:).^2));
+        m(i+1,:,:)=rk_sde(squeeze(m(i,:,:)),squeeze(h_eff(i,:,:)),squeeze(i_s(i,:,:)), v, dt,squeeze(dW(i,:,:)));
+        m(i+1,:,:)=m(i+1,:,:)./sqrt(sum(m(i+1,:,:).^2));
     end
     toc;
     dispstat('Finished.','keepprev');
@@ -333,8 +326,11 @@ end
     cols=mm; %numero de colunas no plot
     rows=nn; %ceil(part_n/cols); % numero de linhas
     eps=0;
-    plot_M_and_H(m,h_app,t,part_n,a,jj,cols,rows,cor,grid,name,eps);
-    %plot_Particles(px,py,d_or,dx,dy,cor,jj,rows,cols,angles,name,eps);
+    for i=1:part_n
+        h_app(:,:,i)=squeeze(i_s(:,:,i))./zeta(i);
+    end
+    plot_M_and_H(m,h_app,t,part_n,1,jj,cols,rows,cor,grid,name,eps);
+    plot_Particles(px,py,d_or,dx,dy,cor,jj,rows,cols,angles,name,eps);
     if m(end,2,1)>0
         count_up=count_up+1;
         result_rk_up=result_rk_up+squeeze(m(:,:,1));
@@ -343,9 +339,9 @@ end
         
     end
 end
-figure
- mag_m1=1-sqrt(m(:,1,1).^2+m(:,2,1).^2+m(:,3,1).^2);
- plot(t,mag_m1);
+%figure
+mag_m1=1-sqrt(m(:,1,1).^2+m(:,2,1).^2+m(:,3,1).^2);
+%plot(t,mag_m1);
 % title(name)
 % print( '-dpng', '-r300' ,[name '-magModule' '.png'])
 % m_exp(1:N+1,:,NN)=squeeze(m(:,:,1));

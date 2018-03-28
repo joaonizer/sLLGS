@@ -14,12 +14,13 @@ for i=1:mm
 end
 
 %%
-h=figure(1);
+h=figure('Visible','off');
 W = 4*cols; H = 2*rows;
-set(h,'PaperUnits','inches')
+set(h,'Units','inches')
 set(h,'PaperOrientation','portrait');
 set(h,'PaperSize',[H,W])
 set(h,'PaperPosition',[0,0,W,H])
+set(h,'Position',[0,0,W,H])
     text_font_size=18;
     plot_linewidth=1;
     axis_linewidth=2;
@@ -42,14 +43,15 @@ set(h,'PaperPosition',[0,0,W,H])
             title(['$P_{' num2str(j) '}$'], 'color', cor(j,:),'Interpreter','latex','fontsize',text_font_size);
         end
         set(gca,'fontsize',text_font_size,'linewidth',axis_linewidth);
+        %set(gca, 'LooseInset', get(gca,'TightInset'))
         ylim([-1.2 1.2]);
         xlim([0 max(t)]);
         %xlim([0 0.5])
         %hl=legend('m_x','m_y','h_{app_x}','h_{app_y}');
         %set(hl,'Orientation','Horizontal','Location','Best')
     end
-    %sdf('P1');
-    
+    sdf('P1');
+    set(gca, 'LooseInset', get(gca,'TightInset'))
     %print( '-dpdfwrite', ['XOR_' num2str(jj) '.pdf'])
     if ~eps
     print( '-dpng', '-r300' ,[name '_' num2str(jj) '.png'])
