@@ -38,7 +38,7 @@ xlabel('nm','Interpreter','latex')
 ylabel('nm','Interpreter','latex')
 daspect([1 1 1])
 
-title(['XOR Architecture'],'Interpreter','tex')
+%title(['XOR Architecture'],'Interpreter','tex')
 %sdf('P1');
 %print('-dpdfwrite',['XOR_Architecture.pdf'])
 if ~eps
