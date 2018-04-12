@@ -24,6 +24,7 @@ end
 N = 60000;       % numero de passos
 tempo_total=60e-9;% Tempo total de simulaÃ§Ã£o
 alpha=0.05;%;0.054;
+alpha_l=1/(1+alpha^2);
 n = [0 1 0]/sqrt(1);
 T=0;        % Kelvin
 Ms=800e3;   % A/m
@@ -38,11 +39,15 @@ result_rk_up=zeros(N+1,3);
 result_rk_down=result_rk_up;
 count_up=0;
 %% Configuracoes do Sistema
-name=['./Results/2Particles/particles_she-' num2str(T) 'K-' num2str(N) 'steps-' num2str(tempo_total*1e9) 'ns-' num2str(alpha*100) 'alpha-force-module'];
+name=['./Results/2Particles/particles_she-U' num2str(T) 'K-' num2str(N) 'steps-' num2str(tempo_total*1e9) 'ns-' num2str(alpha*100) 'alpha-force-module'];
 grid=[
-    4 0 4
-    4 0 4
-    4 4 4
+%    4 0 0 0 4
+%    4 0 0 0 4
+    4 0 0 0 0 
+    4 0 0 0 0 
+    4 4 4 4 4 
+    0 0 0 0 4
+    0 0 0 0 4
     %               0   0   1   1 1
     %               0   0   1   0 0
     %               1   1   1   0 0
@@ -64,7 +69,7 @@ part_n=sum(sum(grid>0)); % quantidade de particulas
 d_min=15; % distancia mÃ­nima entre as particulas
 
 
-alpha_l=1/(1+alpha^2);
+
 mi = [0 1 0]/sqrt(1); % valor inicial das variaveis dependente
 m=zeros(N+1,3,part_n);
 h_eff=zeros(N,3,part_n);
@@ -128,8 +133,8 @@ end
 for i=1:length(w)
     [px(i,:),py(i,:)]=write_Pontos(w,l,cortes_y(i,:),i);
 end
-dx=(w(1)+10)*[0:50];
-dy=(l(1)+20)*[0:50]; %% deslocamentos em y
+dx=(w(1)+5)*[0:50];
+dy=(l(1)+24)*[0:50]; %% deslocamentos em y
 offset=0;
 count=1;
 for i=1:mm
@@ -141,8 +146,8 @@ for i=1:mm
     end
 end
 
-d_or([1 2],1)=d_or([1 2],1)-0;
-d_or([5 6],1)=d_or([5 6],1)+25;
+%d_or([1 2],1)=d_or([1 2],1)-0;
+%d_or([5 6],1)=d_or([5 6],1)+25;
 
 %% Compute Tensores
 compute_NCND=1; % If TRUE computes the tensors again
@@ -162,10 +167,16 @@ else
     warning('Tensores nao foram recalculados!');
 end
 %Nc=0.5*Nc;
-% Nc(:,:,15,[9,11])=zeros(3,3,1,2);
-% Nc(:,:,[9,11],15)=zeros(3,3,2,1);
-% Nc(:,:,16,[12,14])=zeros(3,3,1,2);
-% Nc(:,:,[12,14],16)=zeros(3,3,2,1);
+nc_to_zero_1 = [2 6];
+nc_to_zero_2 = [4 8];
+
+for i=1:length(nc_to_zero_1)
+    
+    index1=(nc_to_zero_1(i)-1)*3+1:(nc_to_zero_1(i)-1)*3+3;
+    index2=(nc_to_zero_2(i)-1)*3+1:(nc_to_zero_2(i)-1)*3+3;
+    Nc(index1,index2)=zeros(3,3);
+    Nc(index2,index1)=zeros(3,3);
+end
 % Nc(:,:,24,[19,21])=zeros(3,3,1,2);
 % Nc(:,:,[19,21],24)=zeros(3,3,2,1);
 % Nc(:,:,16,22)=zeros(3,3,1,1);
@@ -174,7 +185,7 @@ end
 % Nc(:,:,18,15)=zeros(3,3,1,1);
 %% Campo Aplicado
 cor=zeros(part_n,3);
-for jj=14:14
+for jj=3:3
     h_app=zeros(N+1,3,part_n);
     a=1*150e-3; % T
     
@@ -207,22 +218,22 @@ for jj=14:14
                 0   0   0   0   0   0   N/phases %6
                 0   0   0   0   0   0   N/phases %6
                 ];
-        elseif (sum(i==[2 3]))
+        elseif (sum(i==[2 3 ]))
             cor(i,:)=colors(2,:);
             s=      [
-                0   0   0   a   0   0   N/phases %1
-                a   0   0   a   0   0   N/phases %2
+                0   0   0   2*a   0   0   N/phases %1
+                2*a   0   0   2*a   0   0   N/phases %2
                 a   0   0   0   0   0   N/phases %3
                 0   0   0   0   0   0   N/phases %4
                 0   0   0   0   0   0   N/phases %5
                 0   0   0   0   0   0   N/phases %6
                 ];
-        elseif (sum(i==[ 4  7]))
+        elseif (sum(i==[4 5 6]))
             cor(i,:)=colors(3,:);
             s=      [
                 0   0   0   0   0   0   N/phases %1
-                0   0   0   a   0   0   N/phases %2
-                a   0   0   a   0   0   N/phases %3
+                0   0   0   2*a   0   0   N/phases %2
+                2*a   0   0   2*a   0   0   N/phases %3
                 a   0   0   0   0   0   N/phases %4
                 0   0   0   0   0   0   N/phases %5
                 0   0   0   0   0   0   N/phases %6
@@ -232,8 +243,8 @@ for jj=14:14
             s=  [
                 0   0   0   0   0   0   N/phases %1
                 0   0   0   0   0   0   N/phases %2
-                0   0   0   a   0   0   N/phases %3
-                a   0   0   a   0   0   N/phases %4
+                0   0   0   2*a   0   0   N/phases %3
+                2*a   0   0   2*a   0   0   N/phases %4
                 a   0   0   0   0   0   N/phases %5
                 0   0   0   0   0   0   N/phases %6
                 ];
@@ -252,7 +263,7 @@ for jj=14:14
     %Ns = 2*Ms*V/gammamu0/hbar;
     %is=I_s./(q*gammamu0*mu0*Ms*Ns); % magnitude normalizada da corrente de spin
     i_s=ones(N+1,3,part_n);
-    i_s=h_app/a;
+    i_s=h_app/2/a;
     h_app=zeros(N+1,3,part_n);
     for i=1:part_n
         i_s(:,:,i)=squeeze(i_s(:,:,i)).*zeta(i);

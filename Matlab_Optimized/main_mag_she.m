@@ -40,9 +40,8 @@ count_up=0;
 %% Configuracoes do Sistema
 name=['./Results/2Particles/particles_she-' num2str(T) 'K-' num2str(N) 'steps-' num2str(tempo_total*1e9) 'ns-' num2str(alpha*100) 'alpha-force-module'];
 grid=[
-    0 0 1
-    0 0 1
-    1 1 1
+    1 0
+    1 1
 %               0   0   1   1 1
 %               0   0   1   0 0
 %               1   1   1   0 0
