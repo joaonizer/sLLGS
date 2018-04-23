@@ -21,8 +21,8 @@ else
     platform = 'win';
 end
 
-N = 40000;       % numero de passos
-tempo_total=40e-9;% Tempo total de simulaÃ§Ã£o
+N = 1000;       % numero de passos
+tempo_total=1e-9;% Tempo total de simulaÃ§Ã£o
 alpha=0.05;%;0.054;
 n = [0 1 0]/sqrt(1);
 T=0;        % Kelvin
@@ -40,8 +40,8 @@ count_up=0;
 %% Configuracoes do Sistema
 name=['./Results/2Particles/particles_she-' num2str(T) 'K-' num2str(N) 'steps-' num2str(tempo_total*1e9) 'ns-' num2str(alpha*100) 'alpha-force-module'];
 grid=[
-    1 0
     1 1
+%    0 1
 %               0   0   1   1 1
 %               0   0   1   0 0
 %               1   1   1   0 0
@@ -67,8 +67,8 @@ alpha_l=1/(1+alpha^2);
 mi = [0 1 0]/sqrt(1); % valor inicial das variaveis dependente
 m=zeros(N+1,3,part_n);
 h_eff=zeros(N,3,part_n);
-m(1,1,1)=0;
-m(1,2,1)=-1;
+m(1,1,1)=0.98;
+m(1,2,1)=0.199;
 m(1,3,1)=0;
 for i=2:part_n % inicializa as partÃ­culas de forma antiferromagnetica
     m(:,:,i)=(-1)^(i-1)*m(:,:,1);
@@ -107,7 +107,7 @@ for i=1:length(w)
     [px(i,:),py(i,:)]=write_Pontos(w,l,cortes_y(i,:),i);
 end
 dx=(w(1)+10)*[0:50];
-dy=(l(1)+24)*[0:50]; %% deslocamentos em y
+dy=(l(1)+2400)*[0:50]; %% deslocamentos em y
 offset=0;
 count=1;
 for i=1:mm
@@ -219,10 +219,10 @@ i_s=ones(N+1,3,part_n);
 i_s=h_app/a;
 h_app=zeros(N+1,3,part_n);
 for i=1:part_n
-    i_s(:,:,i)=squeeze(i_s(:,:,i)).*zeta(i);
+    i_s(:,:,i)=0*squeeze(i_s(:,:,i)).*zeta(i);
 end
     %% Campo TÃ©rmico
-    K1=1000;
+    K1=0;
     HkMs=2*K1/Ms/mu0/Ms;
     % dt (adimensional) --> dt_real = dt/gammamu0*Ms
     %sig=sqrt(2*alpha*kbT/mu0/V(1)/dt)/Ms;
@@ -267,7 +267,7 @@ end
         
         temp1=reshape(m(i,:,:),1,3*part_n);
         hd(i,:,:) = -reshape(temp1*Nd,3,part_n);
-        hc(i,:,:) = -reshape(temp1*Nc,3,part_n);
+        hc(i,:,:) = -0*reshape(temp1*Nc,3,part_n);
         %+squeeze(hT(i,:,:))...                  % Campo termico (adimensional)
         h_eff(i,:,:) = ...
             +squeeze(h_app(i,:,:)) ...           % Campo externo aplicado (adimensional)
@@ -278,7 +278,7 @@ end
         % m(i+1,:,:)=rk4(squeeze(m(i,:,:)),squeeze(h_eff(i,:,:)),squeeze(hT(i,:,:)),squeeze(i_s(i,:,:)),dt);
         % RK_SDE
         m(i+1,:,:)=rk_sde(squeeze(m(i,:,:)),squeeze(h_eff(i,:,:)),squeeze(i_s(i,:,:)), v, dt,squeeze(dW(i,:,:)));
-        m(i+1,:,:)=m(i+1,:,:)./sqrt(sum(m(i+1,:,:).^2));
+        %m(i+1,:,:)=m(i+1,:,:)./sqrt(sum(m(i+1,:,:).^2));
     end
     toc;
     dispstat('Finished.','keepprev');
