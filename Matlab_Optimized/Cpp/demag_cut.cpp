@@ -67,7 +67,7 @@
 using namespace std;
 
 // Global variables
-const int NMC(5e6);
+const int NMC(1e6);
 double w, t;             // w: particle's width, t: particle's thickness
 double abu[2], abd[2];   //global vectors: yu(x)= abu[0]x +abu[1] and yd(x)= abd[0]x +abd[1]
 // Function prototypes

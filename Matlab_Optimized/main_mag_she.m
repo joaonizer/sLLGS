@@ -25,7 +25,7 @@ N = 40000;       % numero de passos
 tempo_total=40e-9;% Tempo total de simulaÃ§Ã£o
 alpha=0.05;%;0.054;
 n = [0 1 0]/sqrt(1);
-T=0;        % Kelvin
+T=300;        % Kelvin
 Ms=800e3;   % A/m
 kbT=kb*T;   % J
 ti = 0;     % instante inicial da variavel independente
@@ -40,7 +40,6 @@ count_up=0;
 %% Configuracoes do Sistema
 name=['./Results/2Particles/particles_she-' num2str(T) 'K-' num2str(N) 'steps-' num2str(tempo_total*1e9) 'ns-' num2str(alpha*100) 'alpha-force-module'];
 grid=[
-    1 0
     1 1
 %               0   0   1   1 1
 %               0   0   1   0 0
@@ -79,7 +78,7 @@ w=ones(1,part_n)*50;  % width of particles
 
 l=ones(1,part_n)*100; % length of particles
 
-th=ones(1,part_n)*5;   %thickness of particles
+th=ones(1,part_n)*15;   %thickness of particles
 
 
 px=zeros(part_n,4);
@@ -106,8 +105,8 @@ end
 for i=1:length(w)
     [px(i,:),py(i,:)]=write_Pontos(w,l,cortes_y(i,:),i);
 end
-dx=(w(1)+10)*[0:50];
-dy=(l(1)+24)*[0:50]; %% deslocamentos em y
+dx=(w(1)+1000)*[0:50];
+dy=(l(1)+2400)*[0:50]; %% deslocamentos em y
 offset=0;
 count=1;
 for i=1:mm
@@ -174,7 +173,7 @@ for jj=2:2
         ];
     for i=1:part_n
         phases=5;
-        if (i==1) % X in
+        if (i==sum(i==[1])) % X in
             cor(i,:)=colors(1,:);
             s=      [
                 0   0   0   0   0   0   N/phases %2
@@ -206,13 +205,13 @@ for jj=2:2
     end
 %% Corrente de Spin
 % Define a curva da corrente de spin aplicada
-bulk_sha = 0.4; % bul spin hall angle
+bulk_sha = 0.4; % bulk spin hall angle
 th_shm = 5; % [nm] thickness of the spin hall material SHM
 l_shm = 3.5; % [nm] SHM spin diffusion length
 theta_she=bulk_sha*(1-sech(th_shm/l_shm)); % Spin Hall Angle ()
-J_shm=5*1.8e12; % Spin Hall current density (A/m2)
+J_shm=20*1.8e12; % Spin Hall current density (A/m2)
 
-zeta=hbar*theta_she*J_shm/2/q./th/1e-9/Ms;
+zeta=-hbar*theta_she*J_shm/2/q./th/1e-9/Ms;
 %Ns = 2*Ms*V/gammamu0/hbar;
 %is=I_s./(q*gammamu0*mu0*Ms*Ns); % magnitude normalizada da corrente de spin
 i_s=ones(N+1,3,part_n);
@@ -291,7 +290,7 @@ end
     rows=nn; %ceil(part_n/cols); % numero de linhas
     eps=0;
     for i=1:part_n
-    h_app(:,:,i)=squeeze(i_s(:,:,i))./zeta(i);
+    h_app(:,:,i)=0*squeeze(i_s(:,:,i))./zeta(i);
     end
     plot_M_and_H(m,h_app,t,part_n,1,jj,cols,rows,cor,grid,name,eps);
     plot_Particles(px,py,d_or,dx,dy,cor,jj,rows,cols,angles,name,eps);

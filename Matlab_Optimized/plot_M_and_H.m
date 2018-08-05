@@ -14,7 +14,7 @@ for i=1:mm
 end
 
 %%
-h=figure('Visible','off');
+h=figure('Visible','on');
 W = 4*cols; H = 2*rows;
 set(h,'Units','inches')
 set(h,'PaperOrientation','portrait');
@@ -53,10 +53,10 @@ set(h,'Position',[0,0,W,H])
     sdf('P1');
     set(gca, 'LooseInset', get(gca,'TightInset'))
     %print( '-dpdfwrite', ['XOR_' num2str(jj) '.pdf'])
-    if ~eps
-    print( '-dpng', '-r300' ,[name '_' num2str(jj) '.png'])
-    else
-        print( '-depsc', [name '_' num2str(jj) '.eps'])
-    end
+%     if ~eps
+%     print( '-dpng', '-r300' ,[name '_' num2str(jj) '.png'])
+%     else
+%         print( '-depsc', [name '_' num2str(jj) '.eps'])
+%     end
     %close all
 end
