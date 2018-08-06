@@ -25,7 +25,7 @@ N = 60000;       % numero de passos
 tempo_total=60e-9;% Tempo total de simulaÃ§Ã£o
 alpha=0.05;%;0.054;
 n = [0 1 0]/sqrt(1);
-T=30;        % Kelvin
+T=0;        % Kelvin
 Ms=800e3;   % A/m
 kbT=kb*T;   % J
 ti = 0;     % instante inicial da variavel independente
@@ -36,9 +36,12 @@ if time_step>1e-12*alpha
 end
 
 %% Configuracoes do Sistema
-name=['./Results/wire/p15_she_uniform-' num2str(T) 'K-' num2str(N) 'steps-' num2str(tempo_total*1e9) 'ns-' num2str(alpha*100) 'alpha-force-module'];
+name=['./Results/rings/particles_she-' num2str(T) 'K-' num2str(N) 'steps-' num2str(tempo_total*1e9) 'ns-' num2str(alpha*100) 'alpha-force-module'];
 grid=[
-    1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+    2 5 0 1 0 % 1 3   7  
+    4 3 1 2 5 % 2 4 6 8  11
+    0 1 0 1 3 %   5   9  12
+    0 0 0 4 0 %       10
     ];
 part_n=sum(sum(grid>0)); % quantidade de particulas
 
@@ -49,20 +52,22 @@ alpha_l=1/(1+alpha^2);
 mi = [0 1 0]/sqrt(1); % valor inicial das variaveis dependente
 m=zeros(N+1,3,part_n);
 h_eff=zeros(N,3,part_n);
-m(1,1,1)=0;
-m(1,2,1)=1;
+m(1,1,:)=0;
+m(1,2,:)=0;
 m(1,3,1)=0;
-for i=2:part_n % inicializa as partÃ­culas de forma antiferromagnetica
-    m(:,:,i)=(-1)^(i-1)*m(:,:,1);
-end
+
+
+m(1,2,[1 4 8 12])=1;
+m(1,1,[2 3 5 6 7 9 10 11])=1;
+
 %% Dimensoes da Particula
 
 w=ones(1,part_n)*50;  % width of particles
 
-%w=[50 50 50 50 50];
+w([2 3 6 10 11])=100;
 
 l=ones(1,part_n)*100; % length of particles
-%l = [100 100 100 100 100]
+l([2 3 6 10 11])=50;
 th=ones(1,part_n)*15;   %thickness of particles
 
 
@@ -70,8 +75,8 @@ px=zeros(part_n,4);
 py=px;
 d_or=zeros(part_n,3);
 
-d_or(:,1)= 60*[0 1 2 3 4 5 6 7 8 9 10 11 12 13 14];
-d_or(:,2)=  0*[0 0 0 0 0 0 0 0 0 0 0  0  0  0  0];
+d_or(:,1)= [0 85 85 170 170 255 340 340 340 425 425 510];
+d_or(:,2)= 500-[85 0 170 85 255 170 85 255 425 170 340 255];
 
 %plot_Particles(px,py,d_or,dx,dy,cor,jj,rows,cols,angles,name,eps);
 
@@ -87,6 +92,12 @@ for i=1:mm
             cortes_y(count,:)=[0 0 0 -10];
             count=count+1;
         elseif grid(j,i)==3 %or
+            cortes_y(count,:)=[30 0 0 0];
+            count=count+1;
+        elseif grid(j,i)==4 %and
+            cortes_y(count,:)=[0 0 0 -10];
+            count=count+1;
+        elseif grid(j,i)==5 %or
             cortes_y(count,:)=[30 0 0 0];
             count=count+1;
         end
@@ -124,7 +135,7 @@ if compute_NCND
     %Nc_old=Nc;
     %Nd_old=Nd;
     %test_List
-    radius=2;
+    radius=4;
     Nc=compute_Nc(px,py,th,d_or,radius,grid,part_n,compute_PAR,platform);
 else
     warning('Tensores nao foram recalculados!');
@@ -164,8 +175,8 @@ for jj=2:2
         0.4660    0.6740    0.1880  % Verde
         ];
     for i=1:part_n
-        phases=6;
-        if sum(i==[1]) % X in
+        phases=5;
+        if sum(i==[5 7 9]) % X in
             cor(i,:)=colors(1,:);
             s=      [
                 0   0   0   0   0   0   N/phases %2
@@ -173,9 +184,8 @@ for jj=2:2
                 0   0   0   0   0   0   N/phases %2
                 0   0   0   0   0   0   N/phases %2
                 0   0   0   0   0   0   N/phases %6
-                0   0   0   0   0   0   N/phases %6
                 ];
-        elseif (sum(i==[2 3 4 5]))
+        elseif (sum(i==[1 4 8 12]))
             cor(i,:)=colors(2,:);
             s=      [
                 0   0   0   a   0   0   N/phases %1
@@ -183,27 +193,15 @@ for jj=2:2
                 a   0   0   0   0   0   N/phases %3
                 0   0   0   0   0   0   N/phases %4
                 0   0   0   0   0   0   N/phases %5
-                0   0   0   0   0   0   N/phases %6
-                ];
-        elseif (sum(i==[6 7 8 9 10]))
-            cor(i,:)=colors(3,:);
-            s=      [
-                0   0   0   0   0   0   N/phases %1
-                0   0   0   a   0   0   N/phases %2
-                a   0   0   a   0   0   N/phases %3
-                a   0   0   0   0   0   N/phases %4
-                0   0   0   0   0   0   N/phases %5
-                0   0   0   0   0   0   N/phases %6
                 ];
         else
-            cor(i,:)=colors(4,:);
+            cor(i,:)=colors(3,:);
             s=  [
-                0   0   0   0   0   0   N/phases %1
-                0   0   0   0   0   0   N/phases %2
-                0   0   0   a   0   0   N/phases %3
-                a   0   0   a   0   0   N/phases %4
-                a   0   0   0   0   0   N/phases %5
-                0   0   0   0   0   0   N/phases %6
+                0   0   0   0   a   0   N/phases %1
+                0   a   0   0   a   0   N/phases %2
+                0   a   0   0   0   0   N/phases %3
+                0   0   0   0   0   0   N/phases %4
+                0   0   0   0   0   0   N/phases %5
                 ];
         end
         h_app(:,:,i)=compute_Happ(N,s); % aplicado
@@ -214,7 +212,7 @@ bulk_sha = 0.4; % bulk spin hall angle
 th_shm = 5; % [nm] thickness of the spin hall material SHM
 l_shm = 3.5; % [nm] SHM spin diffusion length
 theta_she=bulk_sha*(1-sech(th_shm/l_shm)); % Spin Hall Angle ()
-J_shm=19*1.8e12; % Spin Hall current density (A/m2)
+J_shm=20*1.8e12; % Spin Hall current density (A/m2)
 
 zeta=-hbar*theta_she*J_shm/2/q./th/1e-9/Ms;
 %Ns = 2*Ms*V/gammamu0/hbar;
@@ -282,7 +280,7 @@ end
         % m(i+1,:,:)=rk4(squeeze(m(i,:,:)),squeeze(h_eff(i,:,:)),squeeze(hT(i,:,:)),squeeze(i_s(i,:,:)),dt);
         % RK_SDE
         m(i+1,:,:)=rk_sde(squeeze(m(i,:,:)),squeeze(h_eff(i,:,:)),squeeze(i_s(i,:,:)), v, dt,squeeze(dW(i,:,:)));
-        m(i+1,:,:)=m(i+1,:,:)./sqrt(sum(m(i+1,:,:).^2));
+        %m(i+1,:,:)=m(i+1,:,:)./sqrt(sum(m(i+1,:,:).^2));
     end
     toc;
     dispstat('Finished.','keepprev');
@@ -290,12 +288,12 @@ end
     close all
     t=0:1:N;
     t=t*time_step/1e-9; %transforma em ns
-    angles=m(end,2,:)*90;
+    angles=m(end-10,2,:)*90;
     cols=mm; %numero de colunas no plot
     rows=nn; %ceil(part_n/cols); % numero de linhas
     eps=0;
     for i=1:part_n
-    h_app(:,:,i)=1*squeeze(i_s(:,:,i))./zeta(i);
+    h_app(:,:,i)=0*squeeze(i_s(:,:,i))./zeta(i);
     end
     plot_M_and_H(m,h_app,t,part_n,1,jj,cols,rows,cor,grid,name,eps);
     plot_Particles(px,py,d_or,dx,dy,cor,jj,rows,cols,angles,name,eps);

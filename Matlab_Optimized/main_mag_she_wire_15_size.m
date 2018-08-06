@@ -36,7 +36,7 @@ if time_step>1e-12*alpha
 end
 
 %% Configuracoes do Sistema
-name=['./Results/wire/p15_she_uniform-' num2str(T) 'K-' num2str(N) 'steps-' num2str(tempo_total*1e9) 'ns-' num2str(alpha*100) 'alpha-force-module'];
+name=['./Results/wire/p15_she_dec_size2-' num2str(T) 'K-' num2str(N) 'steps-' num2str(tempo_total*1e9) 'ns-' num2str(alpha*100) 'alpha-force-module'];
 grid=[
     1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
     ];
@@ -61,7 +61,8 @@ w=ones(1,part_n)*50;  % width of particles
 
 %w=[50 50 50 50 50];
 
-l=ones(1,part_n)*100; % length of particles
+l=ones(1,part_n)*150; % length of particles
+l=l.*[1 0.95 0.90 0.85 0.80 1 0.95 0.90 0.85 0.80 1 0.95 0.90 0.85 0.80]
 %l = [100 100 100 100 100]
 th=ones(1,part_n)*15;   %thickness of particles
 
@@ -271,7 +272,7 @@ end
         
         temp1=reshape(m(i,:,:),1,3*part_n);
         hd(i,:,:) = -reshape(temp1*Nd,3,part_n);
-        hc(i,:,:) = -0*reshape(temp1*Nc,3,part_n);
+        hc(i,:,:) = -reshape(temp1*Nc,3,part_n);
         %+squeeze(hT(i,:,:))...                  % Campo termico (adimensional)
         h_eff(i,:,:) = ...
             +squeeze(h_app(i,:,:)) ...           % Campo externo aplicado (adimensional)
