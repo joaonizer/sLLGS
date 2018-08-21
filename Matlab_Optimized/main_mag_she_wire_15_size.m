@@ -7,7 +7,7 @@ close all
 global alpha alpha_l Ms K1 HkMs sig kbT q time_step gammamu0 A n mu0;
 %% Constantes
 %Ku=0.26*1; %eV
-q = -1.60217662e-19; % carga do eletron C
+q = 1.60217662e-19; % carga do eletron C
 mu0=4*pi*1e-7;      % N/A2 ->   m.kg.s-2
 kb=1.38064852e-23;  % J/K  ->   m2.kg.s-2.K-1
 A=13e-12;           % Exchange Stiffness J/m
@@ -25,7 +25,7 @@ N = 60000;       % numero de passos
 tempo_total=60e-9;% Tempo total de simulaÃ§Ã£o
 alpha=0.05;%;0.054;
 n = [0 1 0]/sqrt(1);
-T=30;        % Kelvin
+T=0;        % Kelvin
 Ms=800e3;   % A/m
 kbT=kb*T;   % J
 ti = 0;     % instante inicial da variavel independente
@@ -36,9 +36,9 @@ if time_step>1e-12*alpha
 end
 
 %% Configuracoes do Sistema
-name=['./Results/wire/p15_she_dec_size2-' num2str(T) 'K-' num2str(N) 'steps-' num2str(tempo_total*1e9) 'ns-' num2str(alpha*100) 'alpha-force-module'];
+name=['./Results/wire/p9_she5-' num2str(T) 'K-' num2str(N) 'steps-' num2str(tempo_total*1e9) 'ns-' num2str(alpha*100) 'alpha-force-module'];
 grid=[
-    1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+    1 1 1 1 1 1 1 1 1
     ];
 part_n=sum(sum(grid>0)); % quantidade de particulas
 
@@ -61,8 +61,8 @@ w=ones(1,part_n)*50;  % width of particles
 
 %w=[50 50 50 50 50];
 
-l=ones(1,part_n)*150; % length of particles
-l=l.*[1 0.95 0.90 0.85 0.80 1 0.95 0.90 0.85 0.80 1 0.95 0.90 0.85 0.80]
+l=ones(1,part_n)*100; % length of particles
+l=l.*[1 0.9 0.80 1 0.9 0.80 1 0.9 0.80];
 %l = [100 100 100 100 100]
 th=ones(1,part_n)*15;   %thickness of particles
 
@@ -71,8 +71,8 @@ px=zeros(part_n,4);
 py=px;
 d_or=zeros(part_n,3);
 
-d_or(:,1)= 60*[0 1 2 3 4 5 6 7 8 9 10 11 12 13 14];
-d_or(:,2)=  0*[0 0 0 0 0 0 0 0 0 0 0  0  0  0  0];
+d_or(:,1)= 60*[0 1 2 3 4 5 6 7 8];
+d_or(:,2)=  0*[0 0 0 0 0 0 0 0 0];
 
 %plot_Particles(px,py,d_or,dx,dy,cor,jj,rows,cols,angles,name,eps);
 
@@ -166,7 +166,7 @@ for jj=2:2
         ];
     for i=1:part_n
         phases=6;
-        if sum(i==[1]) % X in
+        if sum(i==[1 10]) % X in
             cor(i,:)=colors(1,:);
             s=      [
                 0   0   0   0   0   0   N/phases %2
@@ -176,7 +176,7 @@ for jj=2:2
                 0   0   0   0   0   0   N/phases %6
                 0   0   0   0   0   0   N/phases %6
                 ];
-        elseif (sum(i==[2 3 4 5]))
+        elseif (sum(i==[2 3]))
             cor(i,:)=colors(2,:);
             s=      [
                 0   0   0   a   0   0   N/phases %1
@@ -186,7 +186,7 @@ for jj=2:2
                 0   0   0   0   0   0   N/phases %5
                 0   0   0   0   0   0   N/phases %6
                 ];
-        elseif (sum(i==[6 7 8 9 10]))
+        elseif (sum(i==[4 5 6]))
             cor(i,:)=colors(3,:);
             s=      [
                 0   0   0   0   0   0   N/phases %1
@@ -209,31 +209,28 @@ for jj=2:2
         end
         h_app(:,:,i)=compute_Happ(N,s); % aplicado
     end
-%% Corrente de Spin
-% Define a curva da corrente de spin aplicada
-bulk_sha = 0.4; % bulk spin hall angle
-th_shm = 5; % [nm] thickness of the spin hall material SHM
-l_shm = 3.5; % [nm] SHM spin diffusion length
-theta_she=bulk_sha*(1-sech(th_shm/l_shm)); % Spin Hall Angle ()
-J_shm=19*1.8e12; % Spin Hall current density (A/m2)
-
-zeta=-hbar*theta_she*J_shm/2/q./th/1e-9/Ms;
-%Ns = 2*Ms*V/gammamu0/hbar;
-%is=I_s./(q*gammamu0*mu0*Ms*Ns); % magnitude normalizada da corrente de spin
-i_s=ones(N+1,3,part_n);
-i_s=h_app/a;
-h_app=zeros(N+1,3,part_n);
-for i=1:part_n
-    i_s(:,:,i)=1*squeeze(i_s(:,:,i)).*zeta(i);
-end
-    %% Campo TÃ©rmico
+    %% Corrente de Spin
+    % Define a curva da corrente de spin aplicada
+    bulk_sha = 0.4; % bulk spin hall angle
+    th_shm = 5; % [nm] thickness of the spin hall material SHM
+    l_shm = 3.5; % [nm] SHM spin diffusion length
+    theta_she=bulk_sha*(1-sech(th_shm/l_shm)); % Spin Hall Angle ()
+    J_shm=20e12; % Spin Hall current density (A/m2)
+    
+    zeta=hbar*theta_she*J_shm/2/q./th/1e-9/Ms;
+    %Ns = 2*Ms*V/gammamu0/hbar;
+    %is=I_s./(q*gammamu0*mu0*Ms*Ns); % magnitude normalizada da corrente de spin
+    i_s=ones(N+1,3,part_n);
+    i_s=h_app/a;
+    h_app=zeros(N+1,3,part_n);
+    for i=1:part_n
+        i_s(:,:,i)=1*squeeze(i_s(:,:,i)).*zeta(i);
+    end
+    %% Anisotropia Magnetocristalina
     K1=0;
     HkMs=2*K1/Ms/mu0/Ms;
+    %% Campo T�rmico
     % dt (adimensional) --> dt_real = dt/gammamu0*Ms
-    %sig=sqrt(2*alpha*kbT/mu0/V(1)/dt)/Ms;
-    
-    %sig=sqrt(2*alpha*kb*T/gammamu0/mu0/Ms/V(1)/time_step)/Ms; % old version
-    %sig=sqrt(2*alpha*kb*T/mu0/Ms/Ms/V(1))*sqrt(dt); % new
     sig=sqrt(2*alpha*kb*T/gammamu0/Ms/mu0/V(1)/time_step)/Ms*sqrt(dt);
     %version
     dW=zeros(N+1,3,part_n);
@@ -245,48 +242,9 @@ end
         hT(:,:,j)=sig*dW(:,:,j)*sqrt(V(1)/V(j));
         v(:,j)=[sig sig sig]*sqrt(V(1)/V(j));
     end
-    %% Metodo para solucao numerica
-    clc
-    fprintf('\n------------------------------------\n');
-    fprintf('            Range-Kutta            \n');
-    fprintf('------------------------------------\n');
-    fprintf('Plataform:\t\t%s\n',platform);
-    fprintf('dt real:\t\t%3.3e s\n',time_step);
-    fprintf('dt line:\t\t%3.3e\n',dt);
-    fprintf('total_time:\t\t%3.3e s\n',tempo_total);
-    fprintf('N: \t\t\t%d\n',N);
-    fprintf('T: \t\t\t%d Kelvin\n',T);
-    fprintf('alpha: \t\t\t%.3f\n',alpha);
-    fprintf('Particles: \t\t%d\n',part_n);
-    fprintf('Experiment No: \t%d\n',jj);
-    fprintf('------------------------------------\n');
-    dispstat('','init'); % One time only initialization
-    dispstat(sprintf('Begining the process...'),'keepthis','timestamp');
-    tic;
-    hc=zeros(N+1,3,part_n); % inicializa o campo tÃ©rmico
-    hd=hc;
-    n_part_n=ones(part_n,1)*n;
-    for i = 1 :N
-        %progress=i/N*100;
-        %dispstat(sprintf('Progress %3.2f %%',progress),'timestamp');
-        
-        temp1=reshape(m(i,:,:),1,3*part_n);
-        hd(i,:,:) = -reshape(temp1*Nd,3,part_n);
-        hc(i,:,:) = -reshape(temp1*Nc,3,part_n);
-        %+squeeze(hT(i,:,:))...                  % Campo termico (adimensional)
-        h_eff(i,:,:) = ...
-            +squeeze(h_app(i,:,:)) ...           % Campo externo aplicado (adimensional)
-            +transpose(HkMs*dot(n_part_n,squeeze(m(i,:,:))',2)*n) ...	% Anistropia magnetocristalina (adimensional)
-            +squeeze(hd(i,:,:)) ...   
-        +squeeze(hc(i,:,:));                    % Campo de Acoplamento (adimensional)
-        % Range-Kuta-4
-        % m(i+1,:,:)=rk4(squeeze(m(i,:,:)),squeeze(h_eff(i,:,:)),squeeze(hT(i,:,:)),squeeze(i_s(i,:,:)),dt);
-        % RK_SDE
-        m(i+1,:,:)=rk_sde(squeeze(m(i,:,:)),squeeze(h_eff(i,:,:)),squeeze(i_s(i,:,:)), v, dt,squeeze(dW(i,:,:)));
-        m(i+1,:,:)=m(i+1,:,:)./sqrt(sum(m(i+1,:,:).^2));
-    end
-    toc;
-    dispstat('Finished.','keepprev');
+    %% SOLVER
+    [m]=solver_RK(platform, time_step,dt,tempo_total,N,T,alpha, part_n,n,jj,Nd,Nc,h_eff,h_app,i_s,v,dW,HkMs,m);
+    
     %% Plot Some Results
     close all
     t=0:1:N;
@@ -296,15 +254,15 @@ end
     rows=nn; %ceil(part_n/cols); % numero de linhas
     eps=0;
     for i=1:part_n
-    h_app(:,:,i)=1*squeeze(i_s(:,:,i))./zeta(i);
+        h_app(:,:,i)=1*squeeze(i_s(:,:,i))./zeta(i);
     end
     plot_M_and_H(m,h_app,t,part_n,1,jj,cols,rows,cor,grid,name,eps);
     plot_Particles(px,py,d_or,dx,dy,cor,jj,rows,cols,angles,name,eps);
-
+    
 end
-figure
- mag_m1=1-sqrt(m(:,1,1).^2+m(:,2,1).^2+m(:,3,1).^2);
- plot(t,mag_m1);
+% figure
+% mag_m1=1-sqrt(m(:,1,1).^2+m(:,2,1).^2+m(:,3,1).^2);
+% plot(t,mag_m1);
 % title(name)
 % print( '-dpng', '-r300' ,[name '-magModule' '.png'])
 % m_exp(1:N+1,:,NN)=squeeze(m(:,:,1));
@@ -315,10 +273,10 @@ figure
 result_rk_up=zeros(N+1,3);
 result_rk_down=result_rk_up;
 count_up=0;
-    if m(end,2,1)>0
-        count_up=count_up+1;
-        result_rk_up=result_rk_up+squeeze(m(:,:,1));
-    else
-        result_rk_down=result_rk_down+squeeze(m(:,:,1));
-        
-    end
+if m(end,2,1)>0
+    count_up=count_up+1;
+    result_rk_up=result_rk_up+squeeze(m(:,:,1));
+else
+    result_rk_down=result_rk_down+squeeze(m(:,:,1));
+    
+end

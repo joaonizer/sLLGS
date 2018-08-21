@@ -25,7 +25,7 @@ N = 40000;       % numero de passos
 tempo_total=40e-9;% Tempo total de simulaÃ§Ã£o
 alpha=0.05;%;0.054;
 n = [0 1 0]/sqrt(1);
-T=0;        % Kelvin
+T=300;        % Kelvin
 Ms=800e3;   % A/m
 kbT=kb*T;   % J
 ti = 0;     % instante inicial da variavel independente
@@ -38,7 +38,7 @@ result_rk_up=zeros(N+1,3);
 result_rk_down=result_rk_up;
 count_up=0;
 %% Configuracoes do Sistema
-name=['./Results/wire/4_particles_she-' num2str(T) 'K-' num2str(N) 'steps-' num2str(tempo_total*1e9) 'ns-' num2str(alpha*100) 'alpha-force-module'];
+name=['./Results/testNC/4_particles_she_down-' num2str(T) 'K-' num2str(N) 'steps-' num2str(tempo_total*1e9) 'ns-' num2str(alpha*100) 'alpha-force-module'];
 grid=[
     1 1 1 1
 %               0   0   1   1 1
@@ -129,11 +129,9 @@ if compute_NCND
     Nc=sparse(3*part_n,3*part_n);
     [Nd, V]=compute_Nd(px,py,th,part_n,compute_PAR,platform);
     %[Nc,~,V]=compute_Tensores(px,py,d_or,th,part_n,platform,compute_PAR,Nc,Nd);
-    %Nc_old=Nc;
-    %Nd_old=Nd;
-    %test_List
-    radius=2;
-    Nc=compute_Nc(px,py,th,d_or,radius,grid,part_n,compute_PAR,platform);
+    %radius=2;
+    %Nc=compute_Nc(px,py,th,d_or,radius,grid,part_n,compute_PAR,platform);
+    Nc=compute_Nc2(px,py,th,d_or,part_n,compute_PAR,platform);
 else
     warning('Tensores nao foram recalculados!');
 end
@@ -234,7 +232,7 @@ end
     hT=dW;
     v = zeros(3,part_n);
     for j=1:part_n
-        rng(jj);
+        rng(jj+1);
         dW(2:end,:,j)=(randn(N,3));
         hT(:,:,j)=sig*dW(:,:,j)*sqrt(V(1)/V(j));
         v(:,j)=[sig sig sig]*sqrt(V(1)/V(j));
@@ -302,9 +300,9 @@ end
         
     end
 end
-figure
- mag_m1=1-sqrt(m(:,1,1).^2+m(:,2,1).^2+m(:,3,1).^2);
- plot(t,mag_m1);
+% figure
+%  mag_m1=1-sqrt(m(:,1,1).^2+m(:,2,1).^2+m(:,3,1).^2);
+%  plot(t,mag_m1);
 % title(name)
 % print( '-dpng', '-r300' ,[name '-magModule' '.png'])
 % m_exp(1:N+1,:,NN)=squeeze(m(:,:,1));
