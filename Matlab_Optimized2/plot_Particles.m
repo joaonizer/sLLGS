@@ -1,7 +1,7 @@
 function []=plot_Particles(px,py,d_or,dx,dy,cor,jj,rows,cols,angles,name,eps)
 %figure(%'Position',[0 0 100*cols 100*rows*2], ...
 %    'Name','Alocação das Partículas');
-h=figure('Visible','off');
+h=figure('Visible','on');
 %W = cols/2; H = rows*2;
 W = 10; H = 10;
 set(h,'PaperUnits','inches')
@@ -42,9 +42,9 @@ daspect([1 1 1])
 %sdf('P1');
 %print('-dpdfwrite',['XOR_Architecture.pdf'])
 if ~eps
-print('-dpng','-r300',[name '_Architecture_' num2str(jj) '.png'])
+%print('-dpng','-r300',[name '_Architecture_' num2str(jj) '.png'])
 else
-        print( '-depsc', [name '_Architecture_' num2str(jj) '.eps'])
+ %       print( '-depsc', [name '_Architecture_' num2str(jj) '.eps'])
     end
-close all
+%close all
 end

@@ -39,7 +39,7 @@ set(h,'Position',[0,0,W,H])
         ylim([-1.2 1.2])
         hold on
         yyaxis right
-        plot(t,squeeze(h_app(:,1,j))/a,'--','linewidth',plot_linewidth); % Plota o Campo aplicado em X (1) normalizado por a
+        plot(t,squeeze(h_app(:,1:2,j))/a,'--','linewidth',plot_linewidth); % Plota o Campo aplicado em X (1) normalizado por a
         ylabel('J_{SHM_y}/|J_{SHM_y}|')
         ylim([-1.2 1.2]);
         

@@ -2,7 +2,7 @@
 clc
 close all
 %more off
-%clear all
+clear all
 %clear all
 global alpha alpha_l Ms K1 HkMs sig kbT q time_step gammamu0 A n mu0;
 %% Constantes
@@ -40,7 +40,12 @@ count_up=0;
 %% Configuracoes do Sistema
 name=['./Results/testNC/4_particles_she_down-' num2str(T) 'K-' num2str(N) 'steps-' num2str(tempo_total*1e9) 'ns-' num2str(alpha*100) 'alpha-force-module'];
 grid=[
-    1 1 1 1
+%     1 0 2
+%     0 3 4
+2 2 2 2
+2 2 2 2
+2 2 2 2
+2 2 2 2
 %               0   0   1   1 1
 %               0   0   1   0 0
 %               1   1   1   0 0
@@ -93,10 +98,13 @@ for i=1:mm
             cortes_y(count,:)=[0 0 0 0];
             count=count+1;
         elseif grid(j,i)==2 %and
-            cortes_y(count,:)=[0 0 0 -10];
+            cortes_y(count,:)=[0 0 0 -25];
             count=count+1;
         elseif grid(j,i)==3 %or
-            cortes_y(count,:)=[30 0 0 0];
+            cortes_y(count,:)=[25 0 0 0];
+            count=count+1;
+        elseif grid(j,i)==4 %or
+            cortes_y(count,:)=[0 25 -25 0];
             count=count+1;
         end
     end
@@ -180,7 +188,7 @@ for jj=2:2
                 0   0   0   0   0   0   N/phases %2
                 0   0   0   0   0   0   N/phases %6
                 ];
-        elseif (sum(i==[2 3 4]))
+        elseif (sum(i==[2]))
             cor(i,:)=colors(2,:);
             s=      [
                 0   0   0   a   0   0   N/phases %1
@@ -189,8 +197,17 @@ for jj=2:2
                 0   0   0   0   0   0   N/phases %4
                 0   0   0   0   0   0   N/phases %5
                 ];
-        else
+        elseif (sum(i==[3]))
             cor(i,:)=colors(3,:);
+            s=      [
+                0   0   0   a   0   0   N/phases %1
+                a   0   0   a   0   0   N/phases %2
+                a   0   0   0   0   0   N/phases %3
+                0   0   0   0   0   0   N/phases %4
+                0   0   0   0   0   0   N/phases %5
+                ];
+        else
+            cor(i,:)=colors(4,:);
             s=  [
                 0   0   0   0   0   0   N/phases %1
                 0   0   0   a   0   0   N/phases %2
