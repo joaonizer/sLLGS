@@ -72,3 +72,6 @@ semilogy(w,zeta(:,:));
 xlabel('Largura da Partícula (nm)')
 ylabel('\zeta_{SHE}')
 %sdf('P1')
+
+%% spin polarization
+

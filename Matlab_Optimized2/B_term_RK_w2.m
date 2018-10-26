@@ -5,5 +5,5 @@ m_v = cross(m,v);
 
 mm_v = cross(m,m_v);
 
-b = -alpha_l*m_v-alpha_l*alpha*mm_v;
+b = -alpha_l*(m_v+alpha*mm_v);
 end

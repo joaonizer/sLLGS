@@ -7,7 +7,7 @@ clear all
 global alpha alpha_l Ms K1 HkMs sig kbT q time_step gammamu0 A n mu0;
 %% Constantes
 %Ku=0.26*1; %eV
-q = -1.60217662e-19; % carga do eletron C
+q = 1.60217662e-19; % carga do eletron C
 mu0=4*pi*1e-7;      % N/A2 ->   m.kg.s-2 A-2
 kb=1.38064852e-23;  % J/K  ->   m2.kg.s-2.K-1
 A=13e-12;           % Exchange Stiffness J/m
@@ -38,7 +38,10 @@ count_up=0;
 %% Configuracoes do Sistema
 name=['./Results/testNC/4_particles_she_down-' num2str(T) 'K-' num2str(N) 'steps-' num2str(tempo_total*1e9) 'ns-' num2str(alpha*100) 'alpha-force-module'];
 grid=[
-1 1
+    0 1 0
+    1 1 1
+    0 1 0
+%1 1
 %     1 0 2
 %     0 3 4
 %2 2 2 2
@@ -223,7 +226,7 @@ l_shm = 3.5; % [nm] SHM spin diffusion length
 theta_she=bulk_sha*(1-sech(th_shm/l_shm)); % Spin Hall Angle ()
 J_shm=5*1.8e12; % Spin Hall current density (A/m2)
 
-zeta=hbar*theta_she*J_shm/2/q./th/1e-9/Ms;
+zeta=-hbar*theta_she*J_shm/2/q./th/1e-9/Ms;
 %Ns = 2*Ms*V/gammamu0/hbar;
 %is=I_s./(q*gammamu0*mu0*Ms*Ns); % magnitude normalizada da corrente de spin
 i_s=ones(N+1,3,part_n);

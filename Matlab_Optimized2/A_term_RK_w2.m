@@ -8,5 +8,5 @@ m_heff = cross(m,h_eff);
 
 mm_heff = cross(m,m_heff);
 
-a=-alpha_l*(m_heff+alpha*(mm_heff)-mm_is)+alpha_l*v.^2.*m; %a
+a=-alpha_l*(m_heff+alpha*(mm_heff)-mm_is-v.^2.*m); %a
 end
