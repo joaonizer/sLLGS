@@ -73,5 +73,5 @@ for i=1:size(s,1)
             
 end
 h_app(N+1,:)=h_app(N,:);% Replica a ultima posicao
-h_app=h_app*t2am/Ms; %converte T --> A/m e normaliza por Ms (A/m)
+%h_app=h_app*t2am/Ms; %converte T --> A/m e normaliza por Ms (A/m)
 end

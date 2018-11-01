@@ -43,9 +43,15 @@ ylim([-1.1 1.1]);
 legend('m_x', 'm_y', 'm_z')
 sdf('P1')
 %%
-erro=squeeze(sum(sum(sqrt(((m1(:,:,:,:,1)-m1(:,:,:,:,2))/(N+1)).^2))));
+%erro=squeeze(sum(sum(sqrt(((m1(:,:,:,:,1)-m1(:,:,:,:,2))/(N+1)).^2))));
+m_1=squeeze(m1(:,:,1,:,1));
+m_01=squeeze(m1(:,:,1,:,2));
+erro1=squeeze(max(max(sqrt((m_1-m_01).^2))));
+m_2=squeeze(m1(:,:,2,:,1));
+m_02=squeeze(m1(:,:,2,:,2));
+erro2=squeeze(max(max(sqrt((m_2-m_02).^2))));
 
-fid=fopen('resultado_NC_distancia_dy.txt','w');
+fid=fopen('resultado_NC_distancia_dx2.txt','w');
 fprintf(fid,'dx & \\multicolumn{3}{c}{erro} & \\multicolumn{3}{c}{Nc} \\\\\n');
 fprintf(fid,' & erro1 & erro2 & Nc_{xx} & Nc_{yy} & Nc_{zz} \\\\\n');
 for i =1:50

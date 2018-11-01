@@ -11,7 +11,7 @@ close all
 %more off
 %clear all
 %clear all
-global alpha alpha_l Ms K1 HkMs sig kbT q time_step gammamu0 A n mu0;
+global alpha alpha_l Ms sig kbT q time_step gammamu0 A n mu0;
 %% Constantes
 %Ku=0.26*1; %eV
 q = -1.60217662e-19; % carga do eletron C
@@ -28,9 +28,9 @@ else
     platform = 'win';
 end
 
-N = 2500;       % numero de passos
-tempo_total=2.5e-9;% Tempo total de simulaÃ§Ã£o
-alpha=1;%;0.054;
+N = 8000;       % numero de passos
+tempo_total=4e-9;% Tempo total de simulaÃ§Ã£o
+alpha=0.05;%;0.054;
 n = [0 1 0]/sqrt(1);
 T=0;        % Kelvin
 Ms=800e3;   % A/m
@@ -47,7 +47,8 @@ count_up=0;
 %% Configuracoes do Sistema
 name=['./Results/testNC/4_particles_she_down-' num2str(T) 'K-' num2str(N) 'steps-' num2str(tempo_total*1e9) 'ns-' num2str(alpha*100) 'alpha-force-module'];
 grid=[
-1 1
+1
+1
     ];
 part_n=sum(sum(grid>0)); % quantidade de particulas
 
@@ -62,7 +63,7 @@ m(1,1,1)=0;
 m(1,2,1)=-1;
 m(1,3,1)=0;
 for i=2:part_n % inicializa as partÃ­culas de forma antiferromagnetica
-    m(1,:,i)=[0.9999 -0.0141 0];%(-1)^(i-1)*m(:,:,1);
+    m(1,:,i)=[0.9999 +0.0141 0];%(-1)^(i-1)*m(:,:,1);
 end
 %% Dimensoes da Particula
 
@@ -101,12 +102,12 @@ for i=1:length(w)
     [px(i,:),py(i,:)]=write_Pontos(w,l,cortes_y(i,:),i);
 end
 
-    m1=zeros(N+1,3,2,50,2);
-    Nc1=zeros(6,6,50,2);
-
-for dxx=10:10
-dx=(w(1)+dxx)*[0:3];
-dy=(l(1)+24)*[0:3]; %% deslocamentos em y
+    m1=zeros(N+1,3,2,25,2);
+    Nc1=zeros(6,6,25,2);
+distancia=1:10:250;
+for dxx=1:length(distancia)
+dx=(w(1)+10)*[0:3];
+dy=(l(1)+distancia(dxx))*[0:3]; %% deslocamentos em y
 offset=0;
 count=1;
 for i=1:mm
@@ -218,21 +219,14 @@ for i=1:part_n
     i_s(:,:,i)=squeeze(i_s(:,:,i)).*zeta(i);
 end
     %% Campo TÃ©rmico
-    K1=0;
-    HkMs=2*K1/Ms/mu0/Ms;
-    % dt (adimensional) --> dt_real = dt/gammamu0*Ms
-    %sig=sqrt(2*alpha*kbT/mu0/V(1)/dt)/Ms;
-    
-    %sig=sqrt(2*alpha*kb*T/gammamu0/mu0/Ms/V(1)/time_step)/Ms; % old version
-    %sig=sqrt(2*alpha*kb*T/mu0/Ms/Ms/V(1))*sqrt(dt); % new
-    sig=sqrt(2*alpha*kb*T/gammamu0/Ms/mu0/V(1)/time_step)/Ms*sqrt(dt);
+    sig=sqrt(2*alpha*kb*T/Ms/Ms/mu0/V(1));
     %version
     dW=zeros(N+1,3,part_n);
     hT=dW;
     v = zeros(3,part_n);
     for j=1:part_n
         rng(jj+1);
-        dW(2:end,:,j)=(randn(N,3));
+        dW(2:end,:,j)=(randn(N,3))*sqrt(dt);
         hT(:,:,j)=sig*dW(:,:,j)*sqrt(V(1)/V(j));
         v(:,j)=[sig sig sig]*sqrt(V(1)/V(j));
     end
@@ -268,7 +262,6 @@ end
         %+squeeze(hT(i,:,:))...                  % Campo termico (adimensional)
         h_eff(i,:,:) = ...
             +squeeze(h_app(i,:,:)) ...           % Campo externo aplicado (adimensional)
-            +transpose(HkMs*dot(n_part_n,squeeze(m(i,:,:))',2)*n) ...	% Anistropia magnetocristalina (adimensional)
             +squeeze(hd(i,:,:)) ...   
         +squeeze(hc(i,:,:));                    % Campo de Acoplamento (adimensional)
         % Range-Kuta-4
@@ -277,8 +270,8 @@ end
         m(i+1,:,:)=rk_sde(squeeze(m(i,:,:)),squeeze(h_eff(i,:,:)),squeeze(i_s(i,:,:)), v, dt,squeeze(dW(i,:,:)));
         m(i+1,:,:)=m(i+1,:,:)./sqrt(sum(m(i+1,:,:).^2));
     end
-    m1(:,:,:,(dxx+1)/2,jj)=m;
-    Nc1(:,:,(dxx+1)/2,jj)=Nc;
+    m1(:,:,:,dxx,jj)=m;
+    Nc1(:,:,dxx,jj)=Nc;
 
 end
  
