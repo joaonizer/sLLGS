@@ -33,11 +33,11 @@ count_up=0;
 %% Configuracoes do Sistema
 name=['./Results/testNC/4_particles_she_down-' num2str(T) 'K-' num2str(N) 'steps-' num2str(tempo_total*1e9) 'ns-' num2str(alpha*100) 'alpha-force-module'];
 grid=[
-    1 1 1 0 0 0 0
-    0 0 0 1 0 0 0
-    0 0 8 8 7 8 9
-    0 0 0 1 0 0 0
-    1 1 1 0 0 0 0
+    7 7 8 9 7 0 0 0
+    0 0 0 0 9 0 0 0
+    0 0 0 9 9 7 8 9
+    0 0 0 0 9 0 0 0
+    7 7 8 9 7 0 0 0
     ];
 part_n=sum(sum(grid>0)); % quantidade de particulas
 
@@ -56,8 +56,8 @@ for i=2:part_n % inicializa as particulas de forma antiferromagnetica
 end
 m(1,2,1)=1;
 m(1,2,2)=-1;
-m(1,2,6)=-1; % AND = 1
-% Dimensoes da Particula
+m(1,2,8)=-1; % AND = 1
+%% Dimensoes da Particula
 
 w=ones(1,part_n)*50;  % width of particles
 
@@ -109,8 +109,8 @@ for i=1:length(w)
     [px(i,:),py(i,:)]=write_Pontos(w,l,cortes_y(i,:),i);
 end
 dx=(w(1)+10)*[0:50];
-dy=(l(1)+24)*[0:50]; %% deslocamentos em y
-%dy=[l(1) 2*l(1)-10 3*l(1)-45 4*l(1)-80 5*l(1)-95]
+%dy=(l(1)-10)*[0:50]; %% deslocamentos em y
+dy=[l(1)-10 l(1)]
 offset=0;
 count=1;
 for i=1:mm
@@ -121,7 +121,7 @@ for i=1:mm
         end
     end
 end
-close all
+%close all
 plot_Particles(px,py,d_or,dx,dy,cor,1,rows,cols,angles,name,eps);
 %% Compute Tensores
 compute_NCND=1; % If TRUE computes the tensors again

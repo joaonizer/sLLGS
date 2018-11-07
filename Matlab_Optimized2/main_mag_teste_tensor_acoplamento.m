@@ -33,11 +33,7 @@ count_up=0;
 %% Configuracoes do Sistema
 name=['./Results/testNC/4_particles_she_down-' num2str(T) 'K-' num2str(N) 'steps-' num2str(tempo_total*1e9) 'ns-' num2str(alpha*100) 'alpha-force-module'];
 grid=[
-    1 1 1 0 0 0 0
-    0 0 0 1 0 0 0
-    0 0 8 8 7 8 9
-    0 0 0 1 0 0 0
-    1 1 1 0 0 0 0
+    1 2
     ];
 part_n=sum(sum(grid>0)); % quantidade de particulas
 
@@ -54,9 +50,11 @@ m(1,3,1)=0;
 for i=2:part_n % inicializa as particulas de forma antiferromagnetica
     m(:,:,i)=(1)^(i-1)*m(:,:,1);
 end
-m(1,2,1)=1;
-m(1,2,2)=-1;
-m(1,2,6)=-1; % AND = 1
+%for i=1:4
+m(1,2,1)=1; % AND = 1
+
+m(1,2,2)=1; %Porta A
+
 % Dimensoes da Particula
 
 w=ones(1,part_n)*50;  % width of particles
@@ -65,7 +63,7 @@ l=ones(1,part_n)*150; % length of particles
 
 th=ones(1,part_n)*15;   %thickness of particles
 
-
+th(2)=15;
 px=zeros(part_n,4);
 py=px;
 d_or=zeros(part_n,3);
@@ -75,31 +73,10 @@ count=1;
 for i=1:mm
     for j=1:nn
         if grid(j,i)==1 % normal retangular
-            cortes_y(count,:)=[0 0 0 0];
+            cortes_y(count,:)=[0 25 -25 0]*1;
             count=count+1;
         elseif grid(j,i)==2 %and
-            cortes_y(count,:)=[0 0 0 -25];
-            count=count+1;
-        elseif grid(j,i)==3 %or
-            cortes_y(count,:)=[25 0 0 0];
-            count=count+1;
-        elseif grid(j,i)==4 %or
-            cortes_y(count,:)=[0 25 -25 0];
-            count=count+1;
-        elseif grid(j,i)==5 %or
-            cortes_y(count,:)=[25 0 0 -25];
-            count=count+1;
-        elseif grid(j,i)==6 %or
-            cortes_y(count,:)=[25 25 -25 -25];
-            count=count+1;
-        elseif grid(j,i)==7 %or
-            cortes_y(count,:)=[0 0 0 0];
-            count=count+1;
-        elseif grid(j,i)==8 %or
-            cortes_y(count,:)=[12.5 12.5 -12.5 -12.5];
-            count=count+1;
-        elseif grid(j,i)==9 %or
-            cortes_y(count,:)=[25 25 -25 -25];
+            cortes_y(count,:)=[35 0 0 -35]*1;
             count=count+1;
         end
     end
@@ -121,8 +98,12 @@ for i=1:mm
         end
     end
 end
-close all
-plot_Particles(px,py,d_or,dx,dy,cor,1,rows,cols,angles,name,eps);
+%d_or(5,2)=d_or(5,2)+12.5;
+%d_or(7,2)=d_or(7,2)+25;
+%d_or(6,2)=d_or(6,2)-12.5;
+%d_or(8,2)=d_or(8,2)-25;
+%close all
+%plot_Particles(px,py,d_or,dx,dy,cor,1,rows,cols,angles,name,eps);
 %% Compute Tensores
 compute_NCND=1; % If TRUE computes the tensors again
 compute_PAR=0; % If TRUE uses paralel parfor to compute coupling tensor
@@ -136,7 +117,16 @@ if compute_NCND
 else
     warning('Tensores nao foram recalculados!');
 end
-%% Campo Aplicado
+%Nc=Nc2;
+i=1;j=2;
+ii=3*(i-1)+1:3*(i-1)+3;
+ij=3*(j-1)+1:3*(j-1)+3;
+fprintf('N: %3.4f\tC: %3.4f\t p: %3.4f\n',full(Nc2(ii(2),ij(2)))*1000,full(Nc(ii(2),ij(2)))*1000,full(Nc(ii(2),ij(2))/Nc2(ii(2),ij(2)))*100);
+i=2;j=1;
+ii=3*(i-1)+1:3*(i-1)+3;
+ij=3*(j-1)+1:3*(j-1)+3;
+fprintf('N: %3.4f\tC: %3.4f\t p: %3.4f\n',full(Nc2(ii(2),ij(2)))*1000,full(Nc(ii(2),ij(2)))*1000,full(Nc(ii(2),ij(2))/Nc2(ii(2),ij(2)))*100);
+% Campo Aplicado
 cor=zeros(part_n,3);
 h_app=zeros(N+1,3,part_n);
 a=1*150e-3; % T
@@ -149,7 +139,7 @@ colors = [
     ];
 for i=1:part_n
     phases=6;
-    if sum(i==[1 2 8]) % X in
+    if sum(i==[1 2 6]) % X in
         cor(i,:)=colors(1,:);
         s=      [
             0   0   0   0   0   0   N/phases %1
@@ -159,7 +149,7 @@ for i=1:part_n
             0   0   0   0   0   0   N/phases %5
             0   0   0   0   0   0   N/phases %6
             ];
-    elseif (sum(i==[3 4 5 6 7 9]))
+    elseif (sum(i==[3 4 5]))
         cor(i,:)=colors(2,:);
         s=      [
             0   0   0   a   0   0   N/phases %1
@@ -169,7 +159,7 @@ for i=1:part_n
             0   0   0   0   0   0   N/phases %5
             0   0   0   0   0   0   N/phases %6
             ];
-    elseif (sum(i==[10 11 12 13 14]))
+    elseif (sum(i==[7 8 9]))
         cor(i,:)=colors(3,:);
         s=      [
             0   0   0   0   0   0   N/phases %1
@@ -192,89 +182,5 @@ for i=1:part_n
     end
     h_app(:,:,i)=compute_Happ(N,s); % aplicado
 end
-%% Corrente de Spin
-% Define a curva da corrente de spin aplicada
-bulk_sha = 0.4; % bul spin hall angle
-th_shm = 5; % [nm] thickness of the spin hall material SHM
-l_shm = 3.5; % [nm] SHM spin diffusion length
-theta_she=bulk_sha*(1-sech(th_shm/l_shm)); % Spin Hall Angle ()
-J_shm=25e12; % Spin Hall current density (A/m2)
-
-zeta=-hbar*theta_she*J_shm/2/q./th/1e-9/Ms;
-%Ns = 2*Ms*V/gammamu0/hbar;
-%is=I_s./(q*gammamu0*mu0*Ms*Ns); % magnitude normalizada da corrente de spin
-i_s=ones(N+1,3,part_n);
-i_s=h_app/a;
-h_app=zeros(N+1,3,part_n);
-for i=1:part_n
-    i_s(:,:,i)=squeeze(i_s(:,:,i)).*zeta(i);
-end
-%% Campo TÃ©rmico
-sig=sqrt(2*alpha*kb*T/mu0/Ms/Ms/V(1)); % new
-
-dW=zeros(N+1,3,part_n);
-hT=dW;
-v = zeros(3,part_n);
-for j=1:part_n
-    rng(j+1);
-    dW(2:end,:,j)=(randn(N,3))*sqrt(dt);
-    hT(:,:,j)=sig*dW(:,:,j)*sqrt(V(1)/V(j));
-    v(:,j)=[sig sig sig]*sqrt(V(1)/V(j));
-end
-%% Metodo para solucao numerica
-clc
-fprintf('\n------------------------------------\n');
-fprintf('            Range-Kutta            \n');
-fprintf('------------------------------------\n');
-fprintf('Plataform:\t\t%s\n',platform);
-fprintf('dt real:\t\t%3.3e s\n',time_step);
-fprintf('dt line:\t\t%3.3e\n',dt);
-fprintf('total_time:\t\t%3.3e s\n',tempo_total);
-fprintf('N: \t\t\t%d\n',N);
-fprintf('T: \t\t\t%d Kelvin\n',T);
-fprintf('alpha: \t\t\t%.3f\n',alpha);
-fprintf('Particles: \t\t%d\n',part_n);
-fprintf('------------------------------------\n');
-dispstat('','init'); % One time only initialization
-dispstat(sprintf('Begining the process...'),'keepthis','timestamp');
-tic;
-hc=zeros(N+1,3,part_n); % inicializa o campo tÃ©rmico
-hd=hc;
-for i = 1 :N
-    %progress=i/N*100;
-    %dispstat(sprintf('Progress %3.2f %%',progress),'timestamp');
-    
-    temp1=reshape(m(i,:,:),1,3*part_n);
-    hd(i,:,:) = -reshape(temp1*Nd,3,part_n);
-    hc(i,:,:) = -reshape(temp1*Nc,3,part_n);
-    h_eff(i,:,:) = ...
-        +squeeze(h_app(i,:,:)) ...           % Campo externo aplicado (adimensional)
-        +squeeze(hd(i,:,:)) ...
-        +squeeze(hc(i,:,:));                    % Campo de Acoplamento (adimensional)
-    % RK_SDE
-    m(i+1,:,:)=rk_sde(squeeze(m(i,:,:)),squeeze(h_eff(i,:,:)),squeeze(i_s(i,:,:)), v, dt,squeeze(dW(i,:,:)));
-    m(i+1,:,:)=m(i+1,:,:)./sqrt(sum(m(i+1,:,:).^2)); % Reprojecao da
-    %magnetiza��o
-end
-toc;
-dispstat('Finished.','keepprev');
-%% Plot Some Results
 close all
-t=0:1:N;
-t=t*time_step/1e-9; %transforma tempo em ns
-angles=m(end-10,2,:)*90;
-cols=mm; %numero de colunas no plot
-rows=nn; %ceil(part_n/cols); % numero de linhas
-eps=0;
-for i=1:part_n
-    h_app(:,:,i)=squeeze(i_s(:,:,i))./zeta(i);
-end
-%plot_M_and_H(m,h_app,t,part_n,1,1,cols,rows,cor,grid,name,eps);
 plot_Particles(px,py,d_or,dx,dy,cor,1,rows,cols,angles,name,eps);
-if m(end,2,1)>0
-    count_up=count_up+1;
-    result_rk_up=result_rk_up+squeeze(m(:,:,1));
-else
-    result_rk_down=result_rk_down+squeeze(m(:,:,1));
-    
-end

@@ -9,9 +9,9 @@ set(h,'PaperOrientation','portrait');
 set(h,'PaperSize',[H,W])
 set(h,'PaperPosition',[0,0,W,H])
 part_n=size(px,1);
-text_font_size=30;
-    plot_linewidth=6;
-    axis_linewidth=6;
+text_font_size=12;
+    plot_linewidth=2;
+    axis_linewidth=2;
 for i=1:part_n
     fill(25+px(i,:)+d_or(i,1),50+py(i,:)+d_or(i,2),cor(i,:),'EdgeColor','none','LineStyle','none')
     hold on

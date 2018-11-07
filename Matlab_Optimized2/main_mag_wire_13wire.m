@@ -36,7 +36,9 @@ count_up=0;
 %% Configuracoes do Sistema
 name=['./Results/testNC/4_particles_she_down-' num2str(T) 'K-' num2str(N) 'steps-' num2str(tempo_total*1e9) 'ns-' num2str(alpha*100) 'alpha-force-module'];
 grid=[
-    1 1 1 1 1 1 1 1 1 1 1 1 1
+    %1 1 1 1 1 1 1 1 1 1 1 1 1
+    %5 4 6 5 4 6 5 4 6 5 4 6 5
+    7 7 8 9 7 8 9 7 8 9 7 8 9
     ];
 part_n=sum(sum(grid>0)); % quantidade de particulas
 
@@ -48,25 +50,25 @@ mi = [0 1 0]/sqrt(1); % valor inicial das variaveis dependente
 m=zeros(N+1,3,part_n);
 h_eff=zeros(N,3,part_n);
 m_test=zeros(2,100,3,part_n);
-for clock=1:2
-    for run=1:100
+for clock=2:2
+    for run=100:100
         m(1,1,1)=0;
         if run<51
-            m(1,2,1)=-1;
+            m(1,2,1)=1;
         else
             m(1,2,1)=-1;
         end
         m(1,3,1)=0;
         for i=2:part_n % inicializa as partÃ­culas de forma antiferromagnetica
-            m(:,:,i)=(-1)^(i-1)*m(:,:,1);
+            m(:,:,i)=(-1)^(i)*m(:,:,1);
         end
         %% Dimensoes da Particula
         
         w=ones(1,part_n)*50;  % width of particles
         
-        l=ones(1,part_n)*100; % length of particles
+        l=ones(1,part_n)*150; % length of particles
         
-        th=ones(1,part_n)*5;   %thickness of particles
+        th=ones(1,part_n)*15;   %thickness of particles
         
         
         px=zeros(part_n,4);
@@ -88,6 +90,21 @@ for clock=1:2
                     count=count+1;
                 elseif grid(j,i)==4 %or
                     cortes_y(count,:)=[0 25 -25 0];
+                    count=count+1;
+                elseif grid(j,i)==5 %or
+                    cortes_y(count,:)=[25 0 0 -25];
+                    count=count+1;
+                elseif grid(j,i)==6 %or
+                    cortes_y(count,:)=[25 25 -25 -25];
+                    count=count+1;
+                elseif grid(j,i)==7 %or
+                    cortes_y(count,:)=[0 0 0 0];
+                    count=count+1;
+                elseif grid(j,i)==8 %or
+                    cortes_y(count,:)=[12.5 12.5 -12.5 -12.5];
+                    count=count+1;
+                elseif grid(j,i)==9 %or
+                    cortes_y(count,:)=[25 25 -25 -25];
                     count=count+1;
                 end
             end
@@ -230,7 +247,7 @@ for clock=1:2
         %% Corrente de Spin
         % Define a curva da corrente de spin aplicada
         bulk_sha = 0.4; % bul spin hall angle
-        th_shm = 5; % [nm] thickness of the spin hall material SHM
+        th_shm = 10; % [nm] thickness of the spin hall material SHM
         l_shm = 3.5; % [nm] SHM spin diffusion length
         theta_she=bulk_sha*(1-sech(th_shm/l_shm)); % Spin Hall Angle ()
         J_shm=25*1e12; % Spin Hall current density (A/m2)
@@ -248,12 +265,12 @@ for clock=1:2
         sig=sqrt(2*alpha*kb*T/mu0/Ms/Ms/V(1)); % new
         %version
         dW=zeros(N+1,3,part_n);
-        hT=dW;
+        %hT=dW;
         v = zeros(3,part_n);
         for j=1:part_n
-            rng(j);
+            rng(clock*2+run*1000+j*part_n);
             dW(2:end,:,j)=(randn(N,3))*sqrt(dt);
-            hT(:,:,j)=sig*dW(:,:,j)*sqrt(V(1)/V(j));
+            %hT(:,:,j)=sig*dW(:,:,j)*sqrt(V(1)/V(j));
             v(:,j)=[sig sig sig]*sqrt(V(1)/V(j));
         end
         %% Metodo para solucao numerica
@@ -269,6 +286,7 @@ for clock=1:2
         fprintf('T: \t\t\t%d Kelvin\n',T);
         fprintf('alpha: \t\t\t%.3f\n',alpha);
         fprintf('Particles: \t\t%d\n',part_n);
+        fprintf('Clock: %d/2 Run: %d/100 \n',clock,run);
         fprintf('------------------------------------\n');
         dispstat('','init'); % One time only initialization
         dispstat(sprintf('Begining the process...'),'keepthis','timestamp');
@@ -293,7 +311,7 @@ for clock=1:2
         toc;
         dispstat('Finished.','keepprev');
         
-        m_test(clock,run,:,:)=squeeze(end,:,:);
+        m_test(clock,run,:,:)=squeeze(m(end,:,:));
     end
 end
 %% Plot Some Results
@@ -307,5 +325,6 @@ eps=0;
 for i=1:part_n
     h_app(:,:,i)=squeeze(i_s(:,:,i))/zeta(i)*J_shm;
 end
-plot_M_and_H(m,h_app,t,part_n,1,1,cols,rows,cor,grid,name,eps);
 plot_Particles(px,py,d_or,dx,dy,cor,1,rows,cols,angles,name,eps);
+plot_M_and_H(m,h_app,t,part_n,1,1,cols,rows,cor,grid,name,eps);
+

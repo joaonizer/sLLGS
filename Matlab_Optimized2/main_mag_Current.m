@@ -53,9 +53,9 @@ m(1,2,5)=-1;
 m(1,2,6)=1;
 %% Dimensoes da Particula
 
-w=ones(1,part_n)*50;  % width of particles
+w=ones(1,part_n)*60;  % width of particles
 
-l=ones(1,part_n)*100; % length of particles
+l=ones(1,part_n)*150; % length of particles
 
 th=ones(1,part_n)*5;   %thickness of particles
 
@@ -112,7 +112,8 @@ else
 end
 %% Campo Aplicado
 %current_density=[1 2.5 5 7.5 10 12.5];
-current_density=[5 7.5 10 15 20 25];
+%current_density=[5 7.5 10 15 20 25];
+current_density=[15 20 25 30];
 for current=1:length(current_density)
 cor=zeros(part_n,3);
     h_app=zeros(N+1,3,part_n);
