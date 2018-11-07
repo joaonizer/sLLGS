@@ -95,7 +95,6 @@ ylabel('m_y')
 ylim([-1.2 1.2])
 legend('P_7','P_8','P_9','P_{10}','P_{11}','P_{12}')
 sdf('P1')
-
 figure('rend','painters','pos',[10 10 1200 300]);% IN P1 P2 P3; % P10 P11 P12
 plot(t(1:100:end),squeeze(m(1:100:end,2,11)),'-','Color',colors(5,:),'MarkerIndices',[1:10:length(t)/100])
 hold on;
