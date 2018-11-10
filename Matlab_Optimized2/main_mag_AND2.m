@@ -313,55 +313,55 @@ end
 plot_Particles(px,py,d_or,dx,dy,cor,1,rows,cols,angles,name,eps);
 
 
-% %% AND 
-% clc
-% res_and=[ 1	-1	-1	-1	-1	-1	1	-1	1	-1	1	-1
-% 1	-1	-1	-1	1	1	1	-1	1	-1	1	-1
-% 1	1	1	-1	-1	-1	1	-1	1	-1	1	-1
-% 1	1	1	1	1	1	-1	1	-1	1	-1	1
-% ];
-% result_and=squeeze(round(result(1,:,:,:)));
-% for i=1:4
-% erro_and(:,i)=sum(squeeze(result_and(i,:,:))==res_and(i,:))/100;
-% end
-% 
-% bar([4,7:12],erro_and([4,7:12],:)*100);
-% % hold on
-% % bar(1:12,erro_and(:,2)*100);
-% % bar(1:12,erro_and(:,3)*100);
-% % bar(1:12,erro_and(:,4)*100);
-% xlabel('Índice da Partícula');
-% xlim([3 13])
-% ylabel('Percentual de Acerto');
-% ylim([0 105])
-% set(gca,'xtick',[4,7:12]);
-% %'1_B','2_{In_1}','3_A','4_O','5_C','6_{In_2}',
-% set(gca,'xticklabel',{'4_O','7','8','9','10','11','12'});
-% legend('\downarrow\downarrow','\downarrow\uparrow','\uparrow\downarrow','\uparrow\uparrow')
-% sdf('P1')
-% %% OR
-% 
-% res_or=[-1	-1	-1	-1	-1	-1	1	-1	1	-1	1	-1
-% -1	-1	-1	1	1	1	-1	1	-1	1	-1	1
-% -1	1	1	1	-1	-1	-1	1	-1	1	-1	1
-% -1	1	1	1	1	1	-1	1	-1	1	-1	1
-% ];
-% result_or=squeeze(round(result(2,:,:,:)));
-% for i=1:4
-% erro_or(:,i)=sum(squeeze(result_or(i,:,:))==res_or(i,:))/100;
-% end
-% 
-% bar([4,7:12],erro_or([4,7:12],:)*100);
-% % hold on
-% % bar(1:12,erro_and(:,2)*100);
-% % bar(1:12,erro_and(:,3)*100);
-% % bar(1:12,erro_and(:,4)*100);
-% xlabel('Índice da Partícula');
-% xlim([3 13])
-% ylabel('Percentual de Acerto');
-% ylim([0 105])
-% set(gca,'xtick',[4,7:12]);
-% %'1_B','2_{In_1}','3_A','4_O','5_C','6_{In_2}',
-% set(gca,'xticklabel',{'4_O','7','8','9','10','11','12'});
-% legend('\downarrow\downarrow','\downarrow\uparrow','\uparrow\downarrow','\uparrow\uparrow')
-% sdf('P1')
+%% AND 
+clc
+res_and=[ 1	-1	-1	-1	-1	-1	1	-1	1	-1	1	-1
+1	-1	-1	-1	1	1	1	-1	1	-1	1	-1
+1	1	1	-1	-1	-1	1	-1	1	-1	1	-1
+1	1	1	1	1	1	-1	1	-1	1	-1	1
+];
+result_and=squeeze(round(result(1,:,:,:)));
+for i=1:4
+erro_and(:,i)=sum(squeeze(result_and(i,:,:))==res_and(i,:))/200;
+end
+
+bar([1:12],erro_and([1:12],:)*100);
+% hold on
+% bar(1:12,erro_and(:,2)*100);
+% bar(1:12,erro_and(:,3)*100);
+% bar(1:12,erro_and(:,4)*100);
+xlabel('Índice da Partícula');
+xlim([0 13])
+ylabel('Percentual de Acerto');
+ylim([0 110])
+set(gca,'xtick',[1:12]);
+%'1_B','2_{In_1}','3_A','4_O','5_C','6_{In_2}',
+set(gca,'xticklabel',{'1_B','2_{In_1}','3_A','4_O','5_C','6_{In_2}','7','8','9','10','11','12'});
+legend('\downarrow\downarrow','\downarrow\uparrow','\uparrow\downarrow','\uparrow\uparrow')
+sdf('P1')
+%% OR
+
+res_or=[-1	-1	-1	-1	-1	-1	1	-1	1	-1	1	-1
+-1	-1	-1	1	1	1	-1	1	-1	1	-1	1
+-1	1	1	1	-1	-1	-1	1	-1	1	-1	1
+-1	1	1	1	1	1	-1	1	-1	1	-1	1
+];
+result_or=squeeze(round(result(2,:,:,:)));
+for i=1:4
+erro_or(:,i)=sum(squeeze(result_or(i,:,:))==res_or(i,:))/200;
+end
+
+bar([1:12],erro_or([1:12],:)*100);
+% hold on
+% bar(1:12,erro_and(:,2)*100);
+% bar(1:12,erro_and(:,3)*100);
+% bar(1:12,erro_and(:,4)*100);
+xlabel('Índice da Partícula');
+xlim([0 13])
+ylabel('Percentual de Acerto');
+ylim([0 110])
+set(gca,'xtick',[1:12]);
+%'1_B','2_{In_1}','3_A','4_O','5_C','6_{In_2}',
+set(gca,'xticklabel',{'1_B','2_{In_1}','3_A','4_O','5_C','6_{In_2}','7','8','9','10','11','12'});
+legend('\downarrow\downarrow','\downarrow\uparrow','\uparrow\downarrow','\uparrow\uparrow')
+sdf('P1')

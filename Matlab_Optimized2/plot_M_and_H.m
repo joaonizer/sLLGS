@@ -13,9 +13,9 @@ for i=1:mm
     end
 end
 
-plot_place=[1 2 3 4];
-rows=2;
-cols=2;
+%plot_place=[1 2 3 4];
+%rows=2;
+%cols=2;
 
 %%
 
@@ -34,12 +34,12 @@ W = 40*cols; H = 20*rows;
     for j=1:part_n
         subplot(rows,cols,plot_place(j));
         yyaxis left
-        plot(t(1:100:end),squeeze(m(1:100:end,1:2,j)),'linewidth',plot_linewidth); % Plota a MagnetizaÃ§Ã£o
+        plot(t(1:10:end),squeeze(m(1:10:end,1:2,j)),'linewidth',plot_linewidth); % Plota a MagnetizaÃ§Ã£o
         ylabel('m')
         ylim([-1.2 1.2])
         hold on
         yyaxis right
-        plot(t(1:100:end),squeeze(h_app(1:100:end,1,j)/1e12),'--','linewidth',plot_linewidth); % Plota o Campo aplicado em X (1) normalizado por a
+        plot(t(1:10:end),squeeze(h_app(1:10:end,1,j)/1e12),'--','linewidth',plot_linewidth); % Plota o Campo aplicado em X (1) normalizado por a
         ylabel('J_{SHM_y} \times10^{12}A/m^2')
         ylim([-2.6 27.2]);
         

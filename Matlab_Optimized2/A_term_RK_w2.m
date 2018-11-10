@@ -1,5 +1,6 @@
 function [a]=A_term_RK_w2(m, h_eff, i_s, v, dt, dW)
 global alpha alpha_l;
+
 m_is = cross(m,i_s);
 
 mm_is = cross(m,m_is);

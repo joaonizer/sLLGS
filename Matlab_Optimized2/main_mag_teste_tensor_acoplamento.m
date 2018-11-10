@@ -33,7 +33,8 @@ count_up=0;
 %% Configuracoes do Sistema
 name=['./Results/testNC/4_particles_she_down-' num2str(T) 'K-' num2str(N) 'steps-' num2str(tempo_total*1e9) 'ns-' num2str(alpha*100) 'alpha-force-module'];
 grid=[
-    1 2
+    0 1
+    1 0
     ];
 part_n=sum(sum(grid>0)); % quantidade de particulas
 
@@ -61,8 +62,8 @@ w=ones(1,part_n)*50;  % width of particles
 
 l=ones(1,part_n)*150; % length of particles
 
-th=ones(1,part_n)*10;   %thickness of particles
-th(2)=5;
+th=ones(1,part_n)*15;   %thickness of particles
+%th(2)=15;
 
 px=zeros(part_n,4);
 py=px;
@@ -73,10 +74,10 @@ count=1;
 for i=1:mm
     for j=1:nn
         if grid(j,i)==1 % normal retangular
-            cortes_y(count,:)=[25 25 -25 -25];%[35 0 0 -35]*1;
+            cortes_y(count,:)=[0 0 0 0];%[25 25 -25 -25];%[35 0 0 -35]*1;
             count=count+1;
         elseif grid(j,i)==2 %and
-            cortes_y(count,:)=[0 25 -25 0]*1;
+            cortes_y(count,:)=[35 0 0 -35]*1;
             count=count+1;
         end
     end
@@ -86,7 +87,7 @@ for i=1:length(w)
     [px(i,:),py(i,:)]=write_Pontos(w,l,cortes_y(i,:),i);
 end
 dx=(w(1)+10)*[0:50];
-dy=(l(1)+24-17.5)*[0:50]; %% deslocamentos em y
+dy=(l(1)+24)*[0:50]; %% deslocamentos em y
 %dy=[l(1) 2*l(1)-10 3*l(1)-45 4*l(1)-80 5*l(1)-95]
 offset=0;
 count=1;
