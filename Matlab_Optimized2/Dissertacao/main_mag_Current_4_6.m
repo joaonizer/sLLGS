@@ -31,10 +31,10 @@ if time_step>1e-12*alpha
 end
 count_up=0;
 %% Configuracoes do Sistema
-name=['./Results/testNC/4_particles_she_down-' num2str(T) 'K-' num2str(N) 'steps-' num2str(tempo_total*1e9) 'ns-' num2str(alpha*100) 'alpha-force-module'];
+name=['./Results/teste']; % Nome para possiveis arquivos de saida
 grid=[
         1 1 1 1 1 1
-    ];
+    ]; 
 part_n=sum(sum(grid>0)); % quantidade de particulas
 
 d_min=15; % distancia mÃ­nima entre as particulas
