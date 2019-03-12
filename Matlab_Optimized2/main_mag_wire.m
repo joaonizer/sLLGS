@@ -1,7 +1,7 @@
 %% Inicio
 clc
 close all
-clear all
+%clear all
 global alpha alpha_l Ms sig kbT q time_step gammamu0 mu0;
 %% Constantes
 %Ku=0.26*1; %eV
@@ -18,8 +18,8 @@ else
     platform = 'win';
 end
 
-N = 40000;       % numero de passos
-tempo_total=20e-9;% Tempo total de simulaÃ§Ã£o
+N = 4000;       % numero de passos
+tempo_total=2e-9;% Tempo total de simulaÃ§Ã£o
 alpha=0.05;%;0.054;
 T=0;        % Kelvin
 Ms=800e3;   % A/m
@@ -38,18 +38,18 @@ grid=[
     ];
 part_n=sum(sum(grid>0)); % quantidade de particulas
 
-d_min=15; % distancia mÃ­nima entre as particulas
+d_min=10; % distancia mÃ­nima entre as particulas
 
 
 alpha_l=1/(1+alpha^2);
 mi = [0 1 0]/sqrt(1); % valor inicial das variaveis dependente
 m=zeros(N+1,3,part_n);
 h_eff=zeros(N,3,part_n);
-m(1,1,1)=0;
-m(1,2,1)=-1;
+m(1,1,1)=0.1411;
+m(1,2,1)=-0.99;
 m(1,3,1)=0;
 for i=2:part_n % inicializa as partÃ­culas de forma antiferromagnetica
-    m(:,:,i)=(-1)^(i-1)*m(:,:,1);
+    m(:,:,i)=(1)^(i-1)*m(:,:,1);
 end
 %% Dimensoes da Particula
 
@@ -57,7 +57,7 @@ w=ones(1,part_n)*50;  % width of particles
 
 l=ones(1,part_n)*100; % length of particles
 
-th=ones(1,part_n)*5;   %thickness of particles
+th=ones(1,part_n)*10;   %thickness of particles
 
 
 px=zeros(part_n,4);
@@ -69,7 +69,7 @@ count=1;
 for i=1:mm
     for j=1:nn
         if grid(j,i)==1 % normal retangular
-            cortes_y(count,:)=[0 0 0 0];
+            cortes_y(count,:)=[0 20 -20 0]*0;
             count=count+1;
         elseif grid(j,i)==2 %and
             cortes_y(count,:)=[0 0 0 -25];
@@ -98,7 +98,22 @@ for i=1:mm
         end
     end
 end
-
+% M0
+% px(1,:)=[0 50 50 0];
+% py(1,:)=[100 100 0 0];
+% th(1)=15;
+% d_or(1,:)=[0 0 0];
+% m(1,1,1)=0.1411;
+% m(1,2,1)=0.99;
+% m(1,3,1)=0;
+% % M1
+% px(2,:)=[0 50 50 0];
+% py(2,:)=[100 75 0 0];
+% th(2)=15;
+% d_or(2,:)=[0 124 0];
+% m(1,1,2)=0.1411;
+% m(1,2,2)=-0.99;
+% m(1,3,2)=0;
 %% Compute Tensores
 compute_NCND=1; % If TRUE computes the tensors again
 compute_PAR=0; % If TRUE uses paralel parfor to compute coupling tensor
@@ -143,11 +158,11 @@ for i=1:part_n
     elseif (sum(i==[3]))
         cor(i,:)=colors(3,:);
         s=      [
+            0   0   0   0   0   0   N/phases %5
             0   0   0   a   0   0   N/phases %1
             a   0   0   a   0   0   N/phases %2
             a   0   0   0   0   0   N/phases %3
             0   0   0   0   0   0   N/phases %4
-            0   0   0   0   0   0   N/phases %5
             ];
     else
         cor(i,:)=colors(4,:);
@@ -164,14 +179,14 @@ end
 %% Corrente de Spin
 % Define a curva da corrente de spin aplicada
 bulk_sha = 0.4; % angulo de spin
-th_shm = 5; % [nm] espessura do material pesado
 l_shm = 3.5; % [nm] comprimento de difusao de spin
+th_shm = 5; % [nm] espessura do material pesado
+J_shm=0*25*1e12; % densidade de corrente de spin (A/m2)
 theta_she=bulk_sha*(1-sech(th_shm/l_shm)); % Spin Hall Angle ()
-J_shm=25*1e12; % densidade de corrente de spin (A/m2)
 zeta=-hbar*theta_she*J_shm/2/q./th/1e-9/Ms;
 i_s=ones(N+1,3,part_n);
 i_s=h_app/a;
-h_app=zeros(N+1,3,part_n);
+%h_app=zeros(N+1,3,part_n);
 for i=1:part_n
     i_s(:,:,i)=squeeze(i_s(:,:,i)).*zeta(i);
 end
@@ -213,7 +228,7 @@ for i = 1 :N
         +squeeze(hc(i,:,:));       % Campo de Acoplamento (adimensional)
     % RK_SDE
     m(i+1,:,:)=rk_sde(squeeze(m(i,:,:)),squeeze(h_eff(i,:,:)),squeeze(i_s(i,:,:)), v, dt,squeeze(dW(i,:,:)));
-    m(i+1,:,:)=m(i+1,:,:)./sqrt(sum(m(i+1,:,:).^2)); % Reprojecao
+    %m(i+1,:,:)=m(i+1,:,:)./sqrt(sum(m(i+1,:,:).^2)); % Reprojecao
 end
 toc;
 dispstat('Finished.','keepprev');
@@ -230,3 +245,4 @@ for i=1:part_n
 end
 plot_M_and_H(m,h_app,t,part_n,1,1,cols,rows,cor,grid,name,eps);
 plot_Particles(px,py,d_or,dx,dy,cor,1,rows,cols,angles,name,eps);
+%close all

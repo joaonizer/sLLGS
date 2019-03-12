@@ -30,7 +30,7 @@ w=max(px(2,2)-px(2,1),px(2,4)-px(2,3));
 h=max(py(2,1)-py(2,4),py(2,2)-py(2,3));
 B=[d_or(2,1)-w/2,d_or(2,2)-h/2,w,h];
 if rectint(A,B) % rectint calcula a intersecao entre os retangulo A e B
-    error('Existe Interseçao entre as partículas!');
+    %error('Existe Interseçao entre as partículas!');
 end
 
 data_p=[

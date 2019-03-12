@@ -62,10 +62,10 @@ W = 40*cols; H = 20*rows;
         xlim([0 max(t)]);
         xlabel('Tempo (ns)')
         %xlim([0 0.5])
-        hl=legend('m_x','m_y','J_{SHM_y}');
-        set(hl,'Orientation','Horizontal','Location','Best')
+        %hl=legend('m_x','m_y','J_{SHM_y}');
+        %set(hl,'Orientation','Horizontal','Location','Best')
     end
-    sdf('P_M_H');
+    %sdf('P_M_H');
     set(gca, 'LooseInset', get(gca,'TightInset'))
     %print( '-dpdfwrite', ['XOR_' num2str(jj) '.pdf'])
     if ~eps

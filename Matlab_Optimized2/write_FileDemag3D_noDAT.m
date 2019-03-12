@@ -40,7 +40,7 @@ end
 %% Leitura e Normaliza��o do Tensor
 % Calculo do Volume
 V=abs(sum(trapz(px,py)))*th;
-Nd=reshape(str2num(Nstr)/4/pi/V,3,3);
+Nd=reshape(str2num(Nstr)/4/pi/V,3,3)';
 %Ns=table2array(readtable('OUT_demag3D3.dat', 'Format', '%f %f %f'));
 V=V*1e-27; % retorna em m3
 end

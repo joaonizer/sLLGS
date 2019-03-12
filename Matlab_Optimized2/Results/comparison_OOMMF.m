@@ -14,7 +14,7 @@ plot(t(1:10:end),squeeze(m(1:10:end,:,1)),'--','MarkerIndices',1:200:length(t),'
 hold on
 ax = gca;
 ax.ColorOrderIndex = 1;
-plot(r0K(1:10:end,1)*1e9,r0K(1:10:end,2:4),'-','MarkerIndices',1:200:length(r0K(:,1)),'MarkerFaceColor','w')
+plot(r0K(1:1:end,1)*1e9,r0K(1:1:end,2:4),'-','MarkerIndices',1:200:length(r0K(:,1)),'MarkerFaceColor','w')
 %lh=legend('m_x sRK', 'm_y sRK', 'm_z sRK', 'm_x OOMMF', 'm_y OOMMF', 'm_z OOMMF');
 lh=legend('m_x', 'm_y', 'm_z');
 
